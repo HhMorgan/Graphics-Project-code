@@ -333,6 +333,7 @@ Model_3DS crash;
 Model_3DS wall;
 Model_3DS grass;
 Model_3DS station;
+Model_3DS key;
 Model_3DS gate;
 
 //=======================================================================
@@ -632,6 +633,8 @@ void setupLight5() {
 //=======================================================================
 //idle Function
 //=======================================================================
+bool isStage1 = 1;
+bool isStage2 = 0;
 float moveCrashX = 0;
 float moveCrashY = 0;
 float moveCrashZ = 0;
@@ -712,7 +715,7 @@ void idle() {
 
 }
 void Keyboard(unsigned char key, int x, int y) {
-	float d = 0.1;
+	float d = 2;
 	float cameraMotion = 0.53;
 	switch (key) {
 	case 'p':
@@ -797,16 +800,48 @@ void Keyboard(unsigned char key, int x, int y) {
 //=======================================================================
 // Display Function
 //=======================================================================
-void buildWall(int count){
+void buildWall(float x, float progress, int count){
 	for (int i = 0; i < count; i++){
 		glPushMatrix();
-		glTranslatef(35 + (1.67*i), 0, 52);
+		glTranslatef(x + (progress*i), 0, 52);
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(-90.0, 0, 0, 1);
 		glScaled(0.03, 0.03, 0.03);
 		wall.Draw();
 		glPopMatrix();
 	}
+}
+
+void buildgrass(float x, float progress, int count){
+	for (int i = 0; i < count; i++){
+		glPushMatrix();
+		glTranslatef(x + (progress*i), 0, 0);
+		glRotatef(90.0, 1, 0, 0);
+		grass.Draw();
+		glPopMatrix();
+	}
+}
+void multipleGrassPatch(float x1, float x2, float x3){
+	//grass
+	glPushMatrix();
+	glTranslatef(x1, 0, 10);
+	glRotatef(90.0, 0, 1, 0);
+	buildgrass(-3, 0.7, 20);
+	glPopMatrix();
+
+	//grass
+	glPushMatrix();
+	glTranslatef(x2, 0, 26);
+	glRotatef(90.0, 0, 1, 0);
+	buildgrass(13, 0.7, 20);
+	glPopMatrix();
+
+	//grass
+	glPushMatrix();
+	glTranslatef(x3, 0, 26);
+	glRotatef(90.0, 0, 1, 0);
+	buildgrass(13, 0.7, 20);
+	glPopMatrix();
 }
 void myDisplay(void) {
 	setupCamera();
@@ -830,24 +865,179 @@ void myDisplay(void) {
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lightIntensity);
 
 
-	// Draw stage1
-	glPushMatrix();
-	glRotatef(-270.f, 1, 0, 0);
-	//glRotatef(-90.f, 0, 0, 1);
+	//Draw Level 1
+	if (isStage1){
+		// Draw crash
+		glPushMatrix();
+		glTranslatef(19, -0.15, -10);
+		glScaled(18, 18, 18);
+		glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
+		glRotatef(90.0, 1, 0, 0);
+		//glRotatef(205.f, 0, 0, 1);
+		glScaled(0.001, 0.001, 0.001);
+		crash.Draw();
+		glPopMatrix();
 
-	//glTranslatef(-29, 0, 95);
-	//glRotatef(20, 0, 1, 0);
-	//glTranslatef(posX, posY, posZ);
-	//glScaled(0.001, 0.001, 0.001);
-	//glScaled(0.02, 0.02, 0.02);
-	//stage1.Draw();
-	glPopMatrix();
+		// Draw stage1
+		glPushMatrix();
+		glRotatef(-270.f, 1, 0, 0);
+		stage1.Draw();
+		glPopMatrix();
+
+		//wall left side
+		glPushMatrix();
+		glTranslated(-50, 0, 90);
+		glRotatef(90.0, 0, 1, 0);
+		buildWall(35, 1.67, 50);
+		glPopMatrix();
+
+		//wall right side
+		glPushMatrix();
+		glTranslated(-15, 0, 90);
+		glRotatef(90.0, 0, 1, 0);
+		buildWall(35, 1.67, 50);
+		glPopMatrix();
+
+		//grass
+		glPushMatrix();
+		multipleGrassPatch(18, 19.5, 16.5);
+		glPopMatrix();
+
+		//grass
+		glPushMatrix();
+		glTranslatef(15, 0, 20);
+		multipleGrassPatch(18, 19.5, 16.5);
+		glPopMatrix();
+
+		//grass
+		glPushMatrix();
+		glTranslatef(-12, 0, 15);
+		multipleGrassPatch(18, 19.5, 16.5);
+		glPopMatrix();
+
+		//grass
+		glPushMatrix();
+		glTranslatef(3, 0, 33);
+		multipleGrassPatch(18, 19.5, 16.5);
+		glPopMatrix();
+
+		//grass
+		glPushMatrix();
+		glTranslatef(-2, 0, 33);
+		multipleGrassPatch(18, 19.5, 16.5);
+		glPopMatrix();
+
+		//wall
+		glPushMatrix();
+		glTranslated(71, 0, 60);
+		glRotatef(180.0, 0, 1, 0);
+		buildWall(35, 1.67, 7);
+		glPopMatrix();
+
+		//wall
+		glPushMatrix();
+		glTranslated(-27, 0, 50);
+		glRotatef(90.0, 0, 1, 0);
+		buildWall(35, 1.67, 7);
+		glPopMatrix();
+
+
+		//wall
+		glPushMatrix();
+		glTranslated(-37, 0, 55);
+		glRotatef(90.0, 0, 1, 0);
+		buildWall(35, 1.67, 6);
+		glPopMatrix();
+
+		//wall
+		glPushMatrix();
+		glTranslated(-51, 0, 8);
+		glRotatef(45.0, 0, 1, 0);
+		buildWall(35, 1.67, 4);
+		glPopMatrix();
+
+		//wall
+		glPushMatrix();
+		glTranslated(-41, 0, 65);
+		glRotatef(90.0, 0, 1, 0);
+		buildWall(35, 1.67, 6);
+		glPopMatrix();
+
+		//gate
+		glPushMatrix();
+		glTranslatef(18, 0, 30);
+		glScaled(0.03, 0.03, 0.03);
+		glRotatef(90.0, 1, 0, 0);
+		gate.Draw();
+		glPopMatrix();
+
+		//wall
+		glPushMatrix();
+		glTranslated(70.5, 0, 81.7);
+		glRotatef(180.0, 0, 1, 0);
+		buildWall(35, 1.67, 7);
+		glPopMatrix();
+
+		//wall
+		glPushMatrix();
+		glTranslated(45, 0, 81.7);
+		glRotatef(180.0, 0, 1, 0);
+		buildWall(35, 1.67, 5);
+		glPopMatrix();
+
+		//teleporter
+		glPushMatrix();
+		glTranslatef(18.5, 0, 42);
+		glRotatef(90.0, 1, 0, 0);
+		glRotatef(180.0, 0, 0, 1);
+		//glRotatef(-90.0, 0, 0, 1);
+		//glRotatef(260.f, 0, 0, 1);
+		station.Draw();
+		glPopMatrix();
+
+		//bomb
+		glPushMatrix();
+		glTranslatef(30, 0, 18);
+		glRotatef(90.0, 0, 0, 1);
+		glRotatef(90.0, 0, 1, 0);
+		glRotatef(260.f, 0, 0, 1);
+		glScaled(0.0003, 0.0003, 0.0003);
+		bomb.Draw();
+		glPopMatrix();
+
+		//slime
+		glPushMatrix();
+		glTranslatef(6, 0, 18);
+		glRotatef(90.0, 0, 0, 1);
+		glRotatef(90.0, 0, 1, 0);
+		glRotatef(90, 0, 0, 1);
+		glScaled(0.0003, 0.0003, 0.0003);
+		slime.Draw();
+		glPopMatrix();
+
+		//collectable
+		glPushMatrix();
+		glTranslatef(30, -1, 10);
+		glScaled(0.025, 0.025, 0.025);
+		glRotatef(90.0, 1, 0, 0);
+		key.Draw();
+		glPopMatrix();
+
+		//collectable
+		glPushMatrix();
+		glTranslatef(6, -1, 25);
+		glScaled(0.025, 0.025, 0.025);
+		glRotatef(90.0, 1, 0, 0);
+		key.Draw();
+		glPopMatrix();
+
+	}
 
 	glPushMatrix();
 	glTranslatef(50, 0, 10);
 	glRotatef(90.0f, 1, 0, 0);
 	glScaled(0.02, 0.02, 0.02);
-	stage2.Draw();
+	//stage2.Draw();
 	glPopMatrix();
 
 
@@ -870,7 +1060,7 @@ void myDisplay(void) {
 	glRotatef(90.0, 1, 0, 0);
 	glRotatef(205.f, 0, 0, 1);
 	glScaled(0.001, 0.001, 0.001);
-	crash.Draw();
+	//crash.Draw();
 	glPopMatrix();
 
 	//bomb
@@ -919,7 +1109,7 @@ void myDisplay(void) {
 
 	//wall
 	glPushMatrix();
-	buildWall(5);
+	//buildWall(5);
 	glPopMatrix();
 
 
@@ -951,22 +1141,15 @@ void myDisplay(void) {
 	//gate.Draw();
 	glPopMatrix();
 
-
-	//sky box
-	/*glPushMatrix();
-
-	GLUquadricObj * qobj;
-	qobj = gluNewQuadric();
-	glTranslated(50, 0, 0);
-	glRotated(90, 1, 0, 1);
-	glBindTexture(GL_TEXTURE_2D, tex);
-	gluQuadricTexture(qobj, true);
-	gluQuadricNormals(qobj, GL_SMOOTH);
-	gluSphere(qobj, 100, 100, 100);
-	gluDeleteQuadric(qobj);
-
-	glPopMatrix();*/
-
+	//collectable
+	glPushMatrix();
+	glTranslatef(35, -1, 53);
+	glScaled(0.025, 0.025, 0.025);
+	glRotatef(90.0, 1, 0, 0);
+	//glRotatef(-90.0, 0, 0, 1);
+	//glRotatef(260.f, 0, 0, 1);
+	//key.Draw();
+	glPopMatrix();
 
 
 	glutSwapBuffers();
@@ -1081,21 +1264,62 @@ camera.up.y = 0.999137;
 camera.up.z = -0.0210868;
 
 
+camera.center.x = 33.3375;
+camera.center.y = 2.09296;
+camera.center.z = 60.2626;
+camera.eye.x = 33.1121;
+camera.eye.y = 2.10409;
+camera.eye.z = 61.2368;
+camera.up.x = -0.0184325;
+camera.up.y = 0.999707;
+camera.up.z = -0.0156873;
+
+camera.center.x = 23.0649;
+camera.center.y = 72.5263;
+camera.center.z = 70.1695;
+camera.eye.x = 23.1202;
+camera.eye.y = 73.3746;
+camera.eye.z = 70.6962;
+camera.up.x = 0.000971282;
+camera.up.y = 0.527399;
+camera.up.z = -0.849617;
+
+camera.center.x = 18.1594;
+camera.center.y = 2.57471;
+camera.center.z = -15.7186;
+camera.eye.x = 18.0868;
+camera.eye.y = 2.56383;
+camera.eye.z = -16.7159;
+camera.up.x = -0.00104444;
+camera.up.y = 0.999941;
+camera.up.z = -0.0108271;
+
 */
 //=======================================================================
 boolean initializeCamera = 1;
 void setupCamera() {
 
 	if (initializeCamera){
-		camera.center.x = 33.3375;
-		camera.center.y = 2.09296;
-		camera.center.z = 60.2626;
-		camera.eye.x = 33.1121;
-		camera.eye.y = 2.10409;
-		camera.eye.z = 61.2368;
-		camera.up.x = -0.0184325;
-		camera.up.y = 0.999707;
-		camera.up.z = -0.0156873;
+		camera.center.x = 23.0649;
+		camera.center.y = 72.5263;
+		camera.center.z = 70.1695;
+		camera.eye.x = 23.1202;
+		camera.eye.y = 73.3746;
+		camera.eye.z = 70.6962;
+		camera.up.x = 0.000971282;
+		camera.up.y = 0.527399;
+		camera.up.z = -0.849617;
+
+
+		camera.center.x = 18.1594;
+		camera.center.y = 2.57471;
+		camera.center.z = -15.7186;
+		camera.eye.x = 18.0868;
+		camera.eye.y = 2.56383;
+		camera.eye.z = -16.7159;
+		camera.up.x = -0.00104444;
+		camera.up.y = 0.999941;
+		camera.up.z = -0.0108271;
 
 		initializeCamera = 0;
 	}
@@ -1135,23 +1359,9 @@ void LoadAssets()
 	grass.Load("Models/Grass/Grass/Grass.3ds");
 	station.Load("Models/station/Computer Panel/main_panel_ma01.3ds");
 	gate.Load("Models/gate/Gate 2/Gate_01.3DS");
+	key.Load("Models/collect/KingdomKey/KingdomKey.3ds");
 	crash.Load("Models/crash/crashbandicoot.3ds");
-	//model_tree.Load("Models/tree/Tree1.3ds");
 
-	// Loading texture files
-	/*tex_wall.Load("Textures/wall2.bmp");
-	tex_floor.Load("Textures/floor.bmp");
-	tex_ceiling.Load("Textures/ceiling1.bmp");
-	tex_decor.Load("Textures/decor.bmp");
-	tex_table.Load("Textures/table8.bmp");
-	tex_tablecloth.Load("Textures/tablecloth.bmp");
-	tex_carpet.Load("Textures/squarecarpet.bmp");
-	tex_table1.Load("Textures/table12.bmp");
-	tex_dancingFloor.Load("Textures/dancingFloor.bmp");
-	tex_glitter.Load("Textures/glitter.bmp");
-	tex_glass.Load("Textures/glass.bmp");
-	tex_bar1.Load("Textures/bar1.bmp");
-	tex_bar2.Load("Textures/bar2.bmp");*/
 	loadBMP(&tex, "Textures/sky4-jpg.bmp", true);
 }
 

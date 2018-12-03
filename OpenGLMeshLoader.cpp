@@ -83,18 +83,6 @@ GLdouble zNear = 0.1;
 GLdouble zFar = 5000;
 
 // Textures
-GLTexture tex_wall;
-GLTexture tex_ceiling;
-GLTexture tex_floor;
-GLTexture tex_decor;
-GLTexture tex_table;
-GLTexture tex_tablecloth;
-GLTexture tex_carpet;
-GLTexture tex_table1;
-GLTexture tex_dancingFloor;
-GLTexture tex_glitter;
-GLTexture tex_glass;
-GLTexture tex_bar1;
 GLTexture tex_bar2;
 
 //--------------------------------------------------------------------------------------------------------------------------------
@@ -344,6 +332,8 @@ Model_3DS bomb;
 Model_3DS crash;
 Model_3DS wall;
 Model_3DS grass;
+Model_3DS station;
+Model_3DS gate;
 
 //=======================================================================
 // Lighting Configuration Function
@@ -724,7 +714,6 @@ void idle() {
 void Keyboard(unsigned char key, int x, int y) {
 	float d = 0.1;
 	float cameraMotion = 0.53;
-
 	switch (key) {
 	case 'p':
 		std::cout << " camera.center.x = " << camera.center.x;
@@ -808,6 +797,17 @@ void Keyboard(unsigned char key, int x, int y) {
 //=======================================================================
 // Display Function
 //=======================================================================
+void buildWall(int count){
+	for (int i = 0; i < count; i++){
+		glPushMatrix();
+		glTranslatef(35 + (1.67*i), 0, 52);
+		glRotatef(90.0, 0, 0, 1);
+		glRotatef(-90.0, 0, 0, 1);
+		glScaled(0.03, 0.03, 0.03);
+		wall.Draw();
+		glPopMatrix();
+	}
+}
 void myDisplay(void) {
 	setupCamera();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -840,14 +840,14 @@ void myDisplay(void) {
 	//glTranslatef(posX, posY, posZ);
 	//glScaled(0.001, 0.001, 0.001);
 	//glScaled(0.02, 0.02, 0.02);
-	stage1.Draw();
+	//stage1.Draw();
 	glPopMatrix();
 
 	glPushMatrix();
 	glTranslatef(50, 0, 10);
 	glRotatef(90.0f, 1, 0, 0);
 	glScaled(0.02, 0.02, 0.02);
-	//stage2.Draw();
+	stage2.Draw();
 	glPopMatrix();
 
 
@@ -919,11 +919,7 @@ void myDisplay(void) {
 
 	//wall
 	glPushMatrix();
-	glTranslatef(35, 0, 52);
-	glRotatef(90.0, 0, 0, 1);
-	glRotatef(-90.0, 0, 0, 1);
-	glScaled(0.03, 0.03, 0.03);
-	//wall.Draw();
+	buildWall(5);
 	glPopMatrix();
 
 
@@ -933,11 +929,27 @@ void myDisplay(void) {
 	glRotatef(90.0, 1, 0, 0);
 	//glRotatef(-90.0, 0, 0, 1);
 	//glRotatef(260.f, 0, 0, 1);
-	grass.Draw();
+	//grass.Draw();
 	glPopMatrix();
 
+	//teleporter
+	glPushMatrix();
+	glTranslatef(35, 0, 52);
+	glRotatef(90.0, 1, 0, 0);
+	//glRotatef(-90.0, 0, 0, 1);
+	//glRotatef(260.f, 0, 0, 1);
+	//station.Draw();
+	glPopMatrix();
 
-
+	//gate
+	glPushMatrix();
+	glTranslatef(35, 0, 52);
+	glScaled(0.03, 0.03, 0.03);
+	glRotatef(90.0, 1, 0, 0);
+	//glRotatef(-90.0, 0, 0, 1);
+	//glRotatef(260.f, 0, 0, 1);
+	//gate.Draw();
+	glPopMatrix();
 
 
 	//sky box
@@ -1121,6 +1133,8 @@ void LoadAssets()
 	diablos.Load("Models/FFDi/diabolos.3ds");
 	wall.Load("Models/wallStone/stoneWall.3DS");
 	grass.Load("Models/Grass/Grass/Grass.3ds");
+	station.Load("Models/station/Computer Panel/main_panel_ma01.3ds");
+	gate.Load("Models/gate/Gate 2/Gate_01.3DS");
 	crash.Load("Models/crash/crashbandicoot.3ds");
 	//model_tree.Load("Models/tree/Tree1.3ds");
 

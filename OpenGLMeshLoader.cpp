@@ -79,7 +79,7 @@ char title[] = "3D Model Loader Sample";
 // 3D Projection Options
 GLdouble fovy = 45.0;
 GLdouble aspectRatio = (GLdouble)WIDTH / (GLdouble)HEIGHT;
-GLdouble zNear = 0.5;
+GLdouble zNear = 0.1;
 GLdouble zFar = 5000;
 
 // Textures
@@ -342,7 +342,8 @@ Model_3DS griver;
 Model_3DS slime;
 Model_3DS bomb;
 Model_3DS crash;
-Model_3DS model_tree;
+Model_3DS wall;
+Model_3DS grass;
 
 //=======================================================================
 // Lighting Configuration Function
@@ -644,25 +645,86 @@ void setupLight5() {
 float moveCrashX = 0;
 float moveCrashY = 0;
 float moveCrashZ = 0;
+float crashMotion = 0.03;
+float getCrashPosX(){
+	return moveCrashX + 35 + 0.1;;
+}
+float getCrashPosZ(){
+	return moveCrashZ + 35 + 0.1;;
+}
 bool collideCrash(float x, float z, float side){
 	//glTranslatef(35,-0.15,55);
 	//glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
-	float crashCurrentX = moveCrashX + 35 + 0.1;
-	float crashCurrentZ = moveCrashZ + 55 - 0.4;
-	cout << crashCurrentX << "  " << x << "\n";
+	float crashCurrentX = getCrashPosX();
+	float crashCurrentZ = getCrashPosZ();
+	cout << crashCurrentX << "    " << x << "\n";
 	if ((x > crashCurrentX - side && x<crashCurrentX + side) && (z>crashCurrentZ - side && z < crashCurrentZ + side)){
-		//cout << "=======================" << "\n";
+		cout << "=======================" << "\n";
 		return true;
 	}
 	return false;
 }
+
+bool colideCrashWithAllObjectsForward(){
+	bool result = 0;
+	//Bomb
+	//result |= collideCrash(35.13, 54.42 + crashMotion, 0.08);
+	//Slime
+	//result |= collideCrash(35.1, 34.98 + crashMotion, 0.08);
+	//Griever
+	//result |= collideCrash(35.1, 34.98 + crashMotion, 0.04);
+	//Diabolos
+	//result |= collideCrash(35.1, 34.95 + crashMotion, 0.04);
+	return result;
+}
+
+
+bool colideCrashWithAllObjectsBackward(){
+	bool result = 0;
+	//Bomb
+	//result |= collideCrash(35.13, 54.42 - crashMotion, 0.08);
+	//Slime
+	//result |= collideCrash(35.1, 34.98 - crashMotion, 0.08);
+	//Griever
+	//result |= collideCrash(35.1, 34.98 - crashMotion, 0.04);
+	//Diabolos
+	//result |= collideCrash(35.1, 34.95 - crashMotion, 0.04);
+	return result;
+}
+
+bool colideCrashWithAllObjectsRight(){
+	bool result = 0;
+	//Bomb
+	//result |= collideCrash(35.13 - crashMotion, 54.42, 0.08);
+	//Slime
+	//result |= collideCrash(35.1 - crashMotion, 34.98, 0.08);
+	//Griever
+	//result |= collideCrash(35.1 - crashMotion, 34.98, 0.04);
+	//Diabolos
+	//result |= collideCrash(35.1 - crashMotion, 34.95, 0.04);
+	return result;
+}
+
+bool colideCrashWithAllObjectsLeft(){
+	bool result = 0;
+	//Bomb
+	//result |= collideCrash(35.13 + crashMotion, 54.42, 0.08);
+	//Slime
+	//result |= collideCrash(35.1 + crashMotion, 34.98, 0.08);
+	//Griever
+	//result |= collideCrash(35.1 + crashMotion, 34.98, 0.04);
+	//Diabolos
+	//result |= collideCrash(35.1 + crashMotion, 34.95, 0.04);
+	return result;
+}
+
 void idle() {
 
 }
 void Keyboard(unsigned char key, int x, int y) {
 	float d = 0.1;
 	float cameraMotion = 0.53;
-	float crashMotion = 0.03;
+
 	switch (key) {
 	case 'p':
 		std::cout << " camera.center.x = " << camera.center.x;
@@ -711,26 +773,26 @@ void Keyboard(unsigned char key, int x, int y) {
 		camera.moveZ(-d);
 		break;
 	case 'i':
-		cout << collideCrash(35.21, 54.6 + crashMotion,0.06) << "\n";
-		if (!collideCrash(35.21, 54.6 + crashMotion, 0.06))
+		//cout << collideCrash(35.21, 54.6 + crashMotion,0.06) << "\n";
+		if (!colideCrashWithAllObjectsForward())
 			moveCrashZ -= crashMotion;
 		//camera.moveZ(cameraMotion);
 		break;
 	case 'k':
-		cout << collideCrash(35.21, 54.6 - crashMotion, 0.06) << "\n";
-		if (!collideCrash(35.21, 54.6 - crashMotion, 0.06))
+		//cout << collideCrash(35.21, 54.6 - crashMotion, 0.06) << "\n";
+		if (!colideCrashWithAllObjectsBackward())
 			moveCrashZ += crashMotion;
 		//camera.moveZ(-cameraMotion);
 		break;
 	case 'l':
-		cout << collideCrash(35.21 - crashMotion, 54.6, 0.06) << "\n";
-		if (!collideCrash(35.21 - crashMotion, 54.6, 0.06))
+		//cout << collideCrash(35.21 - crashMotion, 54.6, 0.06) << "\n";
+		if (!colideCrashWithAllObjectsRight())
 			moveCrashX += crashMotion;
 		//camera.moveX(-cameraMotion);
 		break;
 	case 'j':
-		cout << collideCrash(35.21 + crashMotion, 54.6, 0.06) << "\n";
-		if (!collideCrash(35.21 + crashMotion, 54.6, 0.06))
+		//cout << collideCrash(35.21 + crashMotion, 54.6, 0.06) << "\n";
+		if (!colideCrashWithAllObjectsLeft())
 			moveCrashX -= crashMotion;
 		//camera.moveX(cameraMotion);
 		break;
@@ -772,13 +834,13 @@ void myDisplay(void) {
 	glPushMatrix();
 	glRotatef(-270.f, 1, 0, 0);
 	//glRotatef(-90.f, 0, 0, 1);
-	
+
 	//glTranslatef(-29, 0, 95);
 	//glRotatef(20, 0, 1, 0);
 	//glTranslatef(posX, posY, posZ);
 	//glScaled(0.001, 0.001, 0.001);
 	//glScaled(0.02, 0.02, 0.02);
-	//stage1.Draw();
+	stage1.Draw();
 	glPopMatrix();
 
 	glPushMatrix();
@@ -790,7 +852,7 @@ void myDisplay(void) {
 
 
 	glPushMatrix();
-	//glTranslatef(37.1, 1.25, 54.6);
+	glTranslatef(37.1, 1.25, 54.6);
 	//cout << collideCrash(37.1, 1.25, 54.6) << "\n";
 	//glScaled(18, 18, 18);
 	//glScaled(0.18, 0.55, 0.25);
@@ -802,73 +864,81 @@ void myDisplay(void) {
 
 	// Draw crash
 	glPushMatrix();
-	glTranslatef(35,-0.15,55);
-	//glScaled(1000, 1000, 1000);
+	glTranslatef(35, -0.15, 55);
 	glScaled(18, 18, 18);
-	
 	glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
 	glRotatef(90.0, 1, 0, 0);
 	glRotatef(205.f, 0, 0, 1);
-	
 	glScaled(0.001, 0.001, 0.001);
 	crash.Draw();
 	glPopMatrix();
 
-
+	//bomb
 	glPushMatrix();
 	glTranslatef(35, 0, 52);
-	//glScaled(1000, 1000, 1000);
-	//glScaled(18, 18, 18);
-
 	glRotatef(90.0, 0, 0, 1);
 	glRotatef(90.0, 0, 1, 0);
-	glRotatef(205.f, 0, 0, 1);
-
+	glRotatef(260.f, 0, 0, 1);
 	glScaled(0.0003, 0.0003, 0.0003);
-	bomb.Draw();
+	//bomb.Draw();
 	glPopMatrix();
 
 
-
+	//slime
 	glPushMatrix();
-	glTranslatef(32, 0, 52);
-	//glScaled(1000, 1000, 1000);
-	//glScaled(18, 18, 18);
-
+	glTranslatef(35, 0, 52);
 	glRotatef(90.0, 0, 0, 1);
 	glRotatef(90.0, 0, 1, 0);
-	glRotatef(205.f, 0, 0, 1);
-
+	glRotatef(260.f, 0, 0, 1);
 	glScaled(0.0003, 0.0003, 0.0003);
-	slime.Draw();
+	//slime.Draw();
 	glPopMatrix();
 
+
+	//griver
 	glPushMatrix();
-	glTranslatef(30, 0, 52);
-	//glScaled(1000, 1000, 1000);
-	//glScaled(18, 18, 18);
-
+	glTranslatef(35, 0, 52);
 	glRotatef(90.0, 0, 0, 1);
 	glRotatef(90.0, 0, 1, 0);
-	glRotatef(205.f, 0, 0, 1);
-
+	glRotatef(260.f, 0, 0, 1);
 	glScaled(0.0003, 0.0003, 0.0003);
-	griver.Draw();
+	//griver.Draw();
 	glPopMatrix();
 
 
+	//diablos
 	glPushMatrix();
-	glTranslatef(25, 0, 52);
-	//glScaled(1000, 1000, 1000);
-	//glScaled(18, 18, 18);
-
+	glTranslatef(35, 0, 52);
 	glRotatef(90.0, 0, 0, 1);
 	glRotatef(90.0, 0, 1, 0);
-	glRotatef(205.f, 0, 0, 1);
-
+	glRotatef(260.f, 0, 0, 1);
 	glScaled(0.0003, 0.0003, 0.0003);
-	diablos.Draw();
+	//diablos.Draw();
 	glPopMatrix();
+
+
+	//wall
+	glPushMatrix();
+	glTranslatef(35, 0, 52);
+	glRotatef(90.0, 0, 0, 1);
+	glRotatef(-90.0, 0, 0, 1);
+	glScaled(0.03, 0.03, 0.03);
+	//wall.Draw();
+	glPopMatrix();
+
+
+	//grass
+	glPushMatrix();
+	glTranslatef(35, 0, 52);
+	glRotatef(90.0, 1, 0, 0);
+	//glRotatef(-90.0, 0, 0, 1);
+	//glRotatef(260.f, 0, 0, 1);
+	grass.Draw();
+	glPopMatrix();
+
+
+
+
 
 	//sky box
 	/*glPushMatrix();
@@ -1018,15 +1088,15 @@ void setupCamera() {
 		initializeCamera = 0;
 	}
 	/*if (moveCameraThirdPerson){
-		camera.center.x += 0.1;
-		camera.center.y = 56.7377;
-		camera.center.z = 35.235;
-		camera.eye.x = 50.9432;
-		camera.eye.y = 57.6842;
-		camera.eye.z = 34.9161;
-		camera.up.x = 0.998504;
-		camera.up.y = -0.0542527;
-		camera.up.z = -0.00684152;
+	camera.center.x += 0.1;
+	camera.center.y = 56.7377;
+	camera.center.z = 35.235;
+	camera.eye.x = 50.9432;
+	camera.eye.y = 57.6842;
+	camera.eye.z = 34.9161;
+	camera.up.x = 0.998504;
+	camera.up.y = -0.0542527;
+	camera.up.z = -0.00684152;
 	}*/
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -1049,6 +1119,8 @@ void LoadAssets()
 	slime.Load("Models/FFBl/blobra.3ds");
 	griver.Load("Models/FFGr/griever.3ds");
 	diablos.Load("Models/FFDi/diabolos.3ds");
+	wall.Load("Models/wallStone/stoneWall.3DS");
+	grass.Load("Models/Grass/Grass/Grass.3ds");
 	crash.Load("Models/crash/crashbandicoot.3ds");
 	//model_tree.Load("Models/tree/Tree1.3ds");
 

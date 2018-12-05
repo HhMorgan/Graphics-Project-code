@@ -644,8 +644,9 @@ float moveCrashY = 0;
 float moveCrashZ = 0;
 float crashMotion = 0.3;
 float crashRotate = 0;
-float crashAnim = 25;
+float crashAnim = 5;
 float crashAnimConstant = 1;
+bool isCrashMoving = false;
 float moveBombX = 0.0;
 float moveBombY = 0.0;
 float moveSlimeX = 0.0;
@@ -833,7 +834,7 @@ void idle() {
 }
 
 void crashAnimation(){
-	if (crashAnim > 25)
+	if (crashAnim > 7)
 		crashAnimConstant *= -1;
 	else if (crashAnim < 0)
 		crashAnimConstant *= -1;
@@ -899,11 +900,13 @@ void Keyboard(unsigned char key, int x, int y) {
 				moveCrashZ += crashMotion;
 				crashRotate = 0;
 				crashAnimation();
+				isCrashMoving = true;
 			}
 			else{
 				if (isStage2){
 					moveCrashZ -= crashMotion;
 					crashAnimation();
+					isCrashMoving = true;
 				}
 			}
 		}
@@ -916,11 +919,13 @@ void Keyboard(unsigned char key, int x, int y) {
 				moveCrashZ -= crashMotion;
 				crashRotate = 180;
 				crashAnimation();
+				isCrashMoving = true;
 			}
 			else{
 				if (isStage2){
 					moveCrashZ += crashMotion;
 					crashAnimation();
+					isCrashMoving = true;
 				}
 			}
 		}
@@ -933,11 +938,13 @@ void Keyboard(unsigned char key, int x, int y) {
 				moveCrashX -= crashMotion;
 				crashRotate = -90;
 				crashAnimation();
+				isCrashMoving = true;
 			}
 			else{
 				if (isStage2){
 					moveCrashX += crashMotion;
 					crashAnimation();
+					isCrashMoving = true;
 				}
 			}
 		}
@@ -950,11 +957,13 @@ void Keyboard(unsigned char key, int x, int y) {
 				moveCrashX += crashMotion;
 				crashRotate = 90;
 				crashAnimation();
+				isCrashMoving = true;
 			}
 			else{
 				if (isStage2){
 					moveCrashX -= crashMotion;
 					crashAnimation();
+					isCrashMoving = true;
 				}
 			}
 		}
@@ -967,6 +976,10 @@ void Keyboard(unsigned char key, int x, int y) {
 
 	case GLUT_KEY_ESCAPE:
 		exit(EXIT_SUCCESS);
+
+	default:
+		isCrashMoving = false;
+		break;
 	}
 
 	glFlush();
@@ -1065,12 +1078,14 @@ void myDisplay(void) {
 		glPopMatrix();
 
 		glPushMatrix();
-		glRotated(crashAnim, 0, 1, 0);
+		glRotated(crashAnim, 1, 0, 0);
+		glTranslated(0, 0.1, 0);
 		crash_right_leg.Draw();
 		glPopMatrix();
 
 		glPushMatrix();
-		glRotated(crashAnim, 0, 1, 0);
+		glRotated(crashAnim, -1, 0, 0);
+		glTranslated(0, 0.1, 0);
 		crash_left_leg.Draw();
 		glPopMatrix();
 
@@ -1651,6 +1666,9 @@ void timer(int value)
 		thirdPersonView();
 	else
 		firstPersonView();
+
+	if (!isCrashMoving)
+		crashAnim = 0;
 
 	glutTimerFunc(5, timer, value);
 	glutPostRedisplay();

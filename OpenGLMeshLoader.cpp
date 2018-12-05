@@ -330,6 +330,10 @@ Model_3DS griver;
 Model_3DS slime;
 Model_3DS bomb;
 Model_3DS crash;
+Model_3DS crash_right_arm;
+Model_3DS crash_left_arm;
+Model_3DS crash_right_leg;
+Model_3DS crash_left_leg;
 Model_3DS wall;
 Model_3DS grass;
 Model_3DS station;
@@ -640,6 +644,8 @@ float moveCrashY = 0;
 float moveCrashZ = 0;
 float crashMotion = 0.3;
 float crashRotate = 0;
+float crashAnim = 25;
+float crashAnimConstant = 1;
 float moveBombX = 0.0;
 float moveBombY = 0.0;
 float moveSlimeX = 0.0;
@@ -727,7 +733,7 @@ bool colideCrashWithAllObjectsForward(){
 	result |= collideCrashRectangle(45.9, 75 - crashMotion, 6.3, 1.05);
 	//Gate
 	result |= collideCrashRectangle(33.75, 75 - crashMotion, 7.65, 1.05);
-	cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
+	//cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
 }
 
@@ -758,7 +764,7 @@ bool colideCrashWithAllObjectsBackward(){
 	result |= collideCrashRectangle(45.9, 75 + crashMotion, 6.3, 1.05);
 	//Gate
 	result |= collideCrashRectangle(33.75, 75 + crashMotion, 7.65, 1.05);
-	cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
+//	cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
 }
 
@@ -788,7 +794,7 @@ bool colideCrashWithAllObjectsRight(){
 	result |= collideCrashRectangle(45.9 + crashMotion, 75, 6.3, 1.05);
 	//Gate
 	result |= collideCrashRectangle(33.75 + crashMotion, 75, 7.65, 1.05);
-	cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
+	//cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
 }
 
@@ -825,6 +831,17 @@ bool colideCrashWithAllObjectsLeft(){
 void idle() {
 
 }
+
+void crashAnimation(){
+	if (crashAnim > 25)
+		crashAnimConstant *= -1;
+	else if (crashAnim < 0)
+		crashAnimConstant *= -1;
+
+	crashAnim += crashAnimConstant;
+}
+
+
 void Keyboard(unsigned char key, int x, int y) {
 	float d = 0.5;
 	float cameraMotion = 0.53;
@@ -881,10 +898,12 @@ void Keyboard(unsigned char key, int x, int y) {
 			if (isStage1){
 				moveCrashZ += crashMotion;
 				crashRotate = 0;
+				crashAnimation();
 			}
 			else{
 				if (isStage2){
 					moveCrashZ -= crashMotion;
+					crashAnimation();
 				}
 			}
 		}
@@ -896,10 +915,12 @@ void Keyboard(unsigned char key, int x, int y) {
 			if (isStage1){
 				moveCrashZ -= crashMotion;
 				crashRotate = 180;
+				crashAnimation();
 			}
 			else{
 				if (isStage2){
 					moveCrashZ += crashMotion;
+					crashAnimation();
 				}
 			}
 		}
@@ -910,11 +931,13 @@ void Keyboard(unsigned char key, int x, int y) {
 		if (!colideCrashWithAllObjectsRight()){
 			if (isStage1){
 				moveCrashX -= crashMotion;
-				crashRotate = 90;
+				crashRotate = -90;
+				crashAnimation();
 			}
 			else{
 				if (isStage2){
 					moveCrashX += crashMotion;
+					crashAnimation();
 				}
 			}
 		}
@@ -925,11 +948,13 @@ void Keyboard(unsigned char key, int x, int y) {
 		if (!colideCrashWithAllObjectsLeft()){
 			if (isStage1){
 				moveCrashX += crashMotion;
-				crashRotate = -90;
+				crashRotate = 90;
+				crashAnimation();
 			}
 			else{
 				if (isStage2){
 					moveCrashX -= crashMotion;
+					crashAnimation();
 				}
 			}
 		}
@@ -1024,11 +1049,31 @@ void myDisplay(void) {
 		glTranslatef(19, -0.15, -10);
 		glScaled(18, 18, 18);
 
-		glRotatef(90.0, 1, 0, 0);
-		glRotatef(crashRotate, 0, 0, 1);
+		//glRotatef(90.0, 1, 0, 0);
+		glRotatef(crashRotate, 0, 1, 0);
 		//glRotatef(205.f, 0, 0, 1);
 		glScaled(0.001, 0.001, 0.001);
 		crash.Draw();
+		glPushMatrix();
+		glRotated(crashAnim, 0, 1, 0); // Animate the right arm
+		crash_right_arm.Draw();
+		glPopMatrix();
+
+		glPushMatrix();
+		glRotated(crashAnim, 0, 1, 0);
+		crash_left_arm.Draw();
+		glPopMatrix();
+
+		glPushMatrix();
+		glRotated(crashAnim, 0, 1, 0);
+		crash_right_leg.Draw();
+		glPopMatrix();
+
+		glPushMatrix();
+		glRotated(crashAnim, 0, 1, 0);
+		crash_left_leg.Draw();
+		glPopMatrix();
+
 		glPopMatrix();
 
 		// Draw stage1
@@ -1513,7 +1558,11 @@ void LoadAssets()
 	station.Load("Models/station/Computer Panel/main_panel_ma01.3ds");
 	gate.Load("Models/gate/Gate 2/Gate_01.3DS");
 	key.Load("Models/collect/KingdomKey/KingdomKey.3ds");
-	crash.Load("Models/crash/crashbandicoot.3ds");
+	crash.Load("Models/crash/body.3ds");
+	crash_right_arm.Load("Models/crash/rightarm.3ds");
+	crash_left_arm.Load("Models/crash/leftarm.3ds");
+	crash_right_leg.Load("Models/crash/rightleg.3ds");
+	crash_left_leg.Load("Models/crash/leftleg.3ds");
 
 	loadBMP(&tex, "Textures/sky4-jpg.bmp", true);
 }

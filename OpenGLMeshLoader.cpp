@@ -639,6 +639,7 @@ float moveCrashX = 0;
 float moveCrashY = 0;
 float moveCrashZ = 0;
 float crashMotion = 0.3;
+float crashRotate = 0;
 float moveBombX = 0.0;
 float moveBombY = 0.0;
 float moveSlimeX = 0.0;
@@ -879,6 +880,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		if (!colideCrashWithAllObjectsForward()){
 			if (isStage1){
 				moveCrashZ += crashMotion;
+				crashRotate = 0;
 			}
 			else{
 				if (isStage2){
@@ -893,6 +895,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		if (!colideCrashWithAllObjectsBackward()){
 			if (isStage1){
 				moveCrashZ -= crashMotion;
+				crashRotate = 180;
 			}
 			else{
 				if (isStage2){
@@ -907,6 +910,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		if (!colideCrashWithAllObjectsRight()){
 			if (isStage1){
 				moveCrashX -= crashMotion;
+				crashRotate = 90;
 			}
 			else{
 				if (isStage2){
@@ -921,6 +925,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		if (!colideCrashWithAllObjectsLeft()){
 			if (isStage1){
 				moveCrashX += crashMotion;
+				crashRotate = -90;
 			}
 			else{
 				if (isStage2){
@@ -1020,6 +1025,7 @@ void myDisplay(void) {
 		glScaled(18, 18, 18);
 
 		glRotatef(90.0, 1, 0, 0);
+		glRotatef(crashRotate, 0, 0, 1);
 		//glRotatef(205.f, 0, 0, 1);
 		glScaled(0.001, 0.001, 0.001);
 		crash.Draw();

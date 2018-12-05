@@ -647,6 +647,14 @@ float moveGriverX = 0.0;
 float moveGriverY = 0.0;
 float moveDiablosX = 0.0;
 float moveDiablosY = 0.0;
+
+//========================================================================
+// First Person or Third Person View
+//==================================================
+
+bool isThirdPersonView = true;
+
+
 float getCrashPosX(){
 	return moveCrashX + 35 + 0.1;;
 }
@@ -817,7 +825,7 @@ void idle() {
 
 }
 void Keyboard(unsigned char key, int x, int y) {
-	float d = 2;
+	float d = 0.5;
 	float cameraMotion = 0.53;
 	switch (key) {
 	case 'p':
@@ -922,6 +930,11 @@ void Keyboard(unsigned char key, int x, int y) {
 		}
 		//camera.moveX(cameraMotion);
 		break;
+
+	case 'v':
+		isThirdPersonView = !isThirdPersonView;
+		break;
+
 	case GLUT_KEY_ESCAPE:
 		exit(EXIT_SUCCESS);
 	}
@@ -1536,10 +1549,24 @@ void cameraAnim(int value) {
 }
 
 void thirdPersonView(){
-	camera.center.x = -16.9406 + getCrashPosX();
+
+	// Third Person View
+
+	if (!colideCrashWithAllObjectsRight()) 
+		camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
+
+	else if (colideCrashWithAllObjectsRight())
+		camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+
 	camera.center.y = 2.57471;
 	camera.center.z = -51.1186 + getCrashPosZ();
-	camera.eye.x = -17.0132 + getCrashPosX();
+
+	if (!colideCrashWithAllObjectsRight())
+		camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
+
+	else if (colideCrashWithAllObjectsRight())
+		camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+
 	camera.eye.y = 2.56383;
 	camera.eye.z = -52.1159 + getCrashPosZ();
 	camera.up.x = -0.00104444;
@@ -1547,11 +1574,30 @@ void thirdPersonView(){
 	camera.up.z = -0.0108271;
 }
 
+void firstPersonView()
+{
+
+	// First Person View
+
+	camera.center.x = -16.0318 + getCrashPosX();
+	//camera.center.y = 2.45376;
+	camera.center.z = -42.77647 + getCrashPosZ();
+	camera.eye.x = -16.0696 + getCrashPosX();
+	//camera.eye.y = 2.44289;
+	camera.eye.z = -43.7757 + getCrashPosZ();
+	camera.up.x = -0.00104502;
+	//camera.up.y = 0.999941;
+	camera.up.z = -0.0108352;
+}
+
 void timer(int value)
 {
-	thirdPersonView();
+	if (isThirdPersonView)
+		thirdPersonView();
+	else
+		firstPersonView();
 
-	glutTimerFunc(10, timer, value);
+	glutTimerFunc(5, timer, value);
 	glutPostRedisplay();
 }
 

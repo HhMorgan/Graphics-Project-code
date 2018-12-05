@@ -1535,6 +1535,26 @@ void cameraAnim(int value) {
 
 }
 
+void thirdPersonView(){
+	camera.center.x = -16.9406 + getCrashPosX();
+	camera.center.y = 2.57471;
+	camera.center.z = -51.1186 + getCrashPosZ();
+	camera.eye.x = -17.0132 + getCrashPosX();
+	camera.eye.y = 2.56383;
+	camera.eye.z = -52.1159 + getCrashPosZ();
+	camera.up.x = -0.00104444;
+	camera.up.y = 0.999941;
+	camera.up.z = -0.0108271;
+}
+
+void timer(int value)
+{
+	thirdPersonView();
+
+	glutTimerFunc(10, timer, value);
+	glutPostRedisplay();
+}
+
 //=======================================================================
 // Main Function
 //=======================================================================
@@ -1558,7 +1578,8 @@ void main(int argc, char** argv)
 
 	glutSpecialFunc(Special);
 
-	glutIdleFunc(idle);
+	glutTimerFunc(0, timer, 0);
+	//glutIdleFunc(idle);
 	//glutMotionFunc(myMotion);
 
 	//glutMouseFunc(myMouse);

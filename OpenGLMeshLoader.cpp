@@ -698,6 +698,24 @@ bool colideCrashWithAllObjectsForward(){
 		//Gate
 		result |= collideCrashRectangle(33.75, 75 - crashMotion1, 7.65, 1.05);
 	}
+	if (isStage2){
+		result |= collideCrashRectangle(34.905, 35.49 + crashMotion2, 1.725, 0.05);
+		result |= collideCrashRectangle(33.28, 32.94 + crashMotion2, 0.05, 2.76);
+		result |= collideCrashRectangle(36.6, 32.955 + crashMotion2, 0.05, 2.745);
+		result |= collideCrashRectangle(34.92, 30.52 + crashMotion2, 1.68, 0.05);
+		result |= collideCrashRectangle(34.925, 31.71 + crashMotion2, 0.05, 0.51);
+		result |= collideCrashRectangle(34.905, 32.16 + crashMotion2, 0.735, 0.05);
+		result |= collideCrashRectangle(35.73, 31.74 + crashMotion2, 0.84, 0.05);
+		result |= collideCrashRectangle(35.93, 32.76 + crashMotion2, 0.05, 0.52);
+		result |= collideCrashRectangle(36.255, 33.01 + crashMotion2, 0.405, 0.05);
+		result |= collideCrashRectangle(34.89, 33.37 + crashMotion2, 0.75, 0.05);
+		result |= collideCrashRectangle(34.92, 33.855 + crashMotion2, 0.05, 0.495);
+		result |= collideCrashRectangle(35.295, 34.38 + crashMotion2, 1.395, 0.05);
+		result |= collideCrashRectangle(34.14, 34.695 + crashMotion2, 0.05, 0.315);
+		result |= collideCrashRectangle(34.155, 35.37 + crashMotion2, 0.05, 0.18);
+		result |= collideCrashRectangle(33.54, 33 + crashMotion2, 0.39, 0.05);
+		result |= collideCrashRectangle(33.87, 32.76 + crashMotion2, 0.05, 0.51);
+	}
 	cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
 }
@@ -731,6 +749,24 @@ bool colideCrashWithAllObjectsBackward(){
 		//Gate
 		result |= collideCrashRectangle(33.75, 75 + crashMotion1, 7.65, 1.05);
 	}
+	if (isStage2){
+		result |= collideCrashRectangle(34.905, 35.49 - crashMotion2, 1.725, 0.05);
+		result |= collideCrashRectangle(33.28, 32.94 - crashMotion2, 0.05, 2.76);
+		result |= collideCrashRectangle(36.6, 32.955 - crashMotion2, 0.05, 2.745);
+		result |= collideCrashRectangle(34.92, 30.52 - crashMotion2, 1.68, 0.05);
+		result |= collideCrashRectangle(34.925, 31.71 - crashMotion2, 0.05, 0.51);
+		result |= collideCrashRectangle(34.905, 32.16 - crashMotion2, 0.735, 0.05);
+		result |= collideCrashRectangle(35.73, 31.74 - crashMotion2, 0.84, 0.05);
+		result |= collideCrashRectangle(35.93, 32.76 - crashMotion2, 0.05, 0.52);
+		result |= collideCrashRectangle(36.255, 33.01 - crashMotion2, 0.405, 0.05);
+		result |= collideCrashRectangle(34.89, 33.37 - crashMotion2, 0.75, 0.05);
+		result |= collideCrashRectangle(34.92, 33.855 - crashMotion2, 0.05, 0.495);
+		result |= collideCrashRectangle(35.295, 34.38 - crashMotion2, 1.395, 0.05);
+		result |= collideCrashRectangle(34.14, 34.695 - crashMotion2, 0.05, 0.315);
+		result |= collideCrashRectangle(34.155, 35.37 - crashMotion2, 0.05, 0.18);
+		result |= collideCrashRectangle(33.54, 33 - crashMotion2, 0.39, 0.05);
+		result |= collideCrashRectangle(33.87, 32.76 - crashMotion2, 0.05, 0.51);
+	}
 	cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
 }
@@ -763,6 +799,24 @@ bool colideCrashWithAllObjectsRight(){
 		//Gate
 		result |= collideCrashRectangle(33.75 + crashMotion1, 75, 7.65, 1.05);
 	}
+	if (isStage2){
+		result |= collideCrashRectangle(34.905 - crashMotion2, 35.49, 1.725, 0.05);
+		result |= collideCrashRectangle(33.28 - crashMotion2, 32.94, 0.05, 2.76);
+		result |= collideCrashRectangle(36.6 - crashMotion2, 32.955, 0.05, 2.745);
+		result |= collideCrashRectangle(34.92 - crashMotion2, 30.52, 1.68, 0.05);
+		result |= collideCrashRectangle(34.925 - crashMotion2, 31.71, 0.05, 0.51);
+		result |= collideCrashRectangle(34.905 - crashMotion2, 32.16, 0.735, 0.05);
+		result |= collideCrashRectangle(35.73 - crashMotion2, 31.74, 0.84, 0.05);
+		result |= collideCrashRectangle(35.93 - crashMotion2, 32.76, 0.05, 0.52);
+		result |= collideCrashRectangle(36.255 - crashMotion2, 33.01, 0.405, 0.05);
+		result |= collideCrashRectangle(34.89 - crashMotion2, 33.37, 0.75, 0.05);
+		result |= collideCrashRectangle(34.92 - crashMotion2, 33.855, 0.05, 0.495);
+		result |= collideCrashRectangle(35.295 - crashMotion2, 34.38, 1.395, 0.05);
+		result |= collideCrashRectangle(34.14 - crashMotion2, 34.695, 0.05, 0.315);
+		result |= collideCrashRectangle(34.155 - crashMotion2, 35.37, 0.05, 0.18);
+		result |= collideCrashRectangle(33.54 - crashMotion2, 33, 0.39, 0.05);
+		result |= collideCrashRectangle(33.87 - crashMotion2, 32.76, 0.05, 0.51);
+	}
 	cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
 }
@@ -794,6 +848,24 @@ bool colideCrashWithAllObjectsLeft(){
 		result |= collideCrashRectangle(45.9 - crashMotion1, 75, 6.3, 1.05);
 		//Gate
 		result |= collideCrashRectangle(33.75 - crashMotion1, 75, 7.65, 1.05);
+	}
+	if (isStage2){
+		result |= collideCrashRectangle(34.905 + crashMotion2, 35.49, 1.725, 0.05);
+		result |= collideCrashRectangle(33.28 + crashMotion2, 32.94, 0.05, 2.76);
+		result |= collideCrashRectangle(36.6 + crashMotion2, 32.955, 0.05, 2.745);
+		result |= collideCrashRectangle(34.92 + crashMotion2, 30.52, 1.68, 0.05);
+		result |= collideCrashRectangle(34.925 + crashMotion2, 31.71, 0.05, 0.51);
+		result |= collideCrashRectangle(34.905 + crashMotion2, 32.16, 0.735, 0.05);
+		result |= collideCrashRectangle(35.73 + crashMotion2, 31.74, 0.84, 0.05);
+		result |= collideCrashRectangle(35.93 + crashMotion2, 32.76, 0.05, 0.52);
+		result |= collideCrashRectangle(36.255 + crashMotion2, 33.01, 0.405, 0.05);
+		result |= collideCrashRectangle(34.89 + crashMotion2, 33.37, 0.75, 0.05);
+		result |= collideCrashRectangle(34.92 + crashMotion2, 33.855, 0.05, 0.495);
+		result |= collideCrashRectangle(35.295 + crashMotion2, 34.38, 1.395, 0.05);
+		result |= collideCrashRectangle(34.14 + crashMotion2, 34.695, 0.05, 0.315);
+		result |= collideCrashRectangle(34.155 + crashMotion2, 35.37, 0.05, 0.18);
+		result |= collideCrashRectangle(33.54 + crashMotion2, 33, 0.39, 0.05);
+		result |= collideCrashRectangle(33.87 + crashMotion2, 32.76, 0.05, 0.51);
 	}
 	cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
@@ -1657,6 +1729,16 @@ void setupCamera() {
 			camera.up.x = -0.0262019;
 			camera.up.y = 0.863837;
 			camera.up.z = -0.50309;
+
+			camera.center.x = 52.4833;
+			camera.center.y = 47.3171;
+			camera.center.z = 52.1107;
+			camera.eye.x = 52.4751;
+			camera.eye.y = 48.2794;
+			camera.eye.z = 52.3827;
+			camera.up.x = -0.028508;
+			camera.up.y = 0.271653;
+			camera.up.z = -0.961973;
 		}
 		if (isStage1){
 			camera.center.x = 18.1594;

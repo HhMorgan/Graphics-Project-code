@@ -645,7 +645,11 @@ float moveCrashZ = 0;
 float crashMotion = 0.3;
 float crashRotate = 0;
 float crashAnim = 5;
-float crashAnimConstant = 1;
+float crashAnimConstant = 1.5;
+bool freeRoam = false;
+float rotateCamera = 0;
+float rotateCameraConstant = 0.1;
+float crashIdleAnim = 1.005;
 bool isCrashMoving = false;
 float moveBombX = 0.0;
 float moveBombY = 0.0;
@@ -834,9 +838,9 @@ void idle() {
 }
 
 void crashAnimation(){
-	if (crashAnim > 7)
+	if (crashAnim > 5)
 		crashAnimConstant *= -1;
-	else if (crashAnim < 0)
+	else if (crashAnim < -5)
 		crashAnimConstant *= -1;
 
 	crashAnim += crashAnimConstant;
@@ -974,6 +978,23 @@ void Keyboard(unsigned char key, int x, int y) {
 		isThirdPersonView = !isThirdPersonView;
 		break;
 
+	case 'b':
+		if (rotateCamera > 4)
+			rotateCameraConstant *= -1;
+		if (rotateCamera < -4)
+			rotateCameraConstant *= -1;
+
+		rotateCamera += rotateCameraConstant;
+		break;
+
+	case 'f':
+		freeRoam = !freeRoam;
+		
+		if (!freeRoam)
+			isThirdPersonView = true;
+
+		break;
+
 	case GLUT_KEY_ESCAPE:
 		exit(EXIT_SUCCESS);
 
@@ -1066,7 +1087,11 @@ void myDisplay(void) {
 		glRotatef(crashRotate, 0, 1, 0);
 		//glRotatef(205.f, 0, 0, 1);
 		glScaled(0.001, 0.001, 0.001);
+		glScaled(crashIdleAnim, crashIdleAnim, crashIdleAnim);
+		glPushMatrix();
+		//glRotated(crashAnim, 0, 1, 0); // Animate the body? Yes or No? y = 1 looks nice and x = 1 looks nice too
 		crash.Draw();
+		glPopMatrix();
 		glPushMatrix();
 		glRotated(crashAnim, 0, 1, 0); // Animate the right arm
 		crash_right_arm.Draw();
@@ -1649,7 +1674,7 @@ void firstPersonView()
 
 	// First Person View
 
-	camera.center.x = -16.0318 + getCrashPosX();
+	camera.center.x = -16.0318 + getCrashPosX() + rotateCamera;
 	//camera.center.y = 2.45376;
 	camera.center.z = -42.77647 + getCrashPosZ();
 	camera.eye.x = -16.0696 + getCrashPosX();
@@ -1662,13 +1687,22 @@ void firstPersonView()
 
 void timer(int value)
 {
-	if (isThirdPersonView)
-		thirdPersonView();
-	else
-		firstPersonView();
+	if (!freeRoam){
+		if (isThirdPersonView)
+			thirdPersonView();
+		else
+			firstPersonView();
+	}
 
-	if (!isCrashMoving)
+	if (!isCrashMoving){
 		crashAnim = 0;
+		if (crashIdleAnim > 1.005)
+			crashAnimConstant *= -1;
+		else if (crashIdleAnim < 1)
+			crashAnimConstant *= -1;
+
+		crashIdleAnim += (crashAnimConstant * 0.0005);
+	}
 
 	glutTimerFunc(5, timer, value);
 	glutPostRedisplay();

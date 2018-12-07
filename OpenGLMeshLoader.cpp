@@ -777,7 +777,7 @@ bool stageEnd(){
 		result |= collideCrashSquare(34.74, 86.9699, 1.05);
 	}
 	if (isStage2){
-		result |= collideCrashSquare(50.1, -42.3, 0.05);
+		result |= collideCrashSquare(50.1, -42.3, 1.05);
 	}
 	return result;
 }
@@ -834,7 +834,7 @@ bool colideCrashWithAllObjectsForward(){
 
 		if (isGate2){
 			//Gate
-			result |= collideCrashRectangle(34.93, 30.865 + crashMotion2, 0.05, 0.365);
+			result |= collideCrashRectangle(32.1f, -40.99995f + crashMotion2, 1.05, 6.500050000000002f);
 		}
 
 	}
@@ -894,7 +894,7 @@ bool colideCrashWithAllObjectsBackward(){
 
 		if (isGate2){
 			//Gate
-			result |= collideCrashRectangle(34.93, 30.865 - crashMotion2, 0.05, 0.365);
+			result |= collideCrashRectangle(32.1f, -40.99995f - crashMotion2, 1.05, 6.500050000000002f);
 		}
 	}
 	//cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
@@ -953,7 +953,7 @@ bool colideCrashWithAllObjectsRight(){
 
 		if (isGate2){
 			//Gate
-			result |= collideCrashRectangle(34.93 - crashMotion2, 30.865, 0.05, 0.365);
+			result |= collideCrashRectangle(32.1f - crashMotion2, -40.99995f, 1.05, 6.500050000000002f);
 		}
 	}
 	//cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
@@ -1012,7 +1012,7 @@ bool colideCrashWithAllObjectsLeft(){
 
 		if (isGate2){
 			//Gate
-			result |= collideCrashRectangle(34.93 + crashMotion2, 30.865, 0.05, 0.365);
+			result |= collideCrashRectangle(32.1f + crashMotion2, -40.99995f, 1.05, 6.500050000000002f);
 		}
 	}
 	//cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";

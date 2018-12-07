@@ -637,8 +637,8 @@ void setupLight5() {
 //=======================================================================
 //idle Function
 //=======================================================================
-bool isStage1 = 0;
-bool isStage2 = 1;
+bool isStage1 = 1;
+bool isStage2 = 0;
 bool isKey1 = 1;
 bool isKey2 = 1;
 bool isKey3 = 1;
@@ -1080,27 +1080,24 @@ void Keyboard(unsigned char key, int x, int y) {
 		//cout << collideCrash(35.21, 54.6 + crashMotion,0.06) << "\n";
 		if (!colideCrashWithAllObjectsForward()){
 			if (isStage1){
-				moveCrashZ += crashMotion1;
-				crashRotate = 0;
-				crashAnimation();
-				isCrashMoving = true;
-			}
-			else{
-				if (isStage2){
-					moveCrashZ -= crashMotion2;
-					crashAnimation();
-					isCrashMoving = true;
+				if (rotateThirdPerson == 0){
+					moveCrashZ += crashMotion1;
+					crashRotate = 0;
 				}
-			}
-		}
-		CollectKey();
-		break;
-	case 'k':
-		//cout << collideCrash(35.21, 54.6 - crashMotion, 0.06) << "\n";
-		if (!colideCrashWithAllObjectsBackward()){
-			if (isStage1){
-				moveCrashZ -= crashMotion1;
-				crashRotate = 180;
+				else if (rotateThirdPerson == 1){
+					moveCrashX += crashMotion1;
+					crashRotate = 90;
+				}
+				else if (rotateThirdPerson == 2){
+					moveCrashZ -= crashMotion1;
+					crashRotate = 180;
+				}
+
+				else if (rotateThirdPerson == 3){
+					moveCrashX -= crashMotion1;
+					crashRotate = -90;
+				}
+				
 				crashAnimation();
 				isCrashMoving = true;
 			}
@@ -1114,18 +1111,74 @@ void Keyboard(unsigned char key, int x, int y) {
 		}
 		CollectKey();
 		break;
-	case 'l':
-		//cout << collideCrash(35.21 - crashMotion, 54.6, 0.06) << "\n";
-		if (!colideCrashWithAllObjectsRight()){
+	case 'k':
+		//cout << collideCrash(35.21, 54.6 - crashMotion, 0.06) << "\n";
+		if (!colideCrashWithAllObjectsBackward()){
 			if (isStage1){
-				moveCrashX -= crashMotion1;
-				crashRotate = -90;
+
+				if (rotateThirdPerson == 0){
+					moveCrashZ -= crashMotion1;
+					crashRotate = 180;
+				}
+
+				else if (rotateThirdPerson == 1){
+					moveCrashX -= crashMotion1;
+					crashRotate = -90;
+				}
+
+				else if (rotateThirdPerson == 2){
+					moveCrashZ += crashMotion1;
+					crashRotate = 0;
+				}
+
+				else if (rotateThirdPerson == 3){
+					moveCrashX += crashMotion1;
+					crashRotate = 90;
+				}
+
 				crashAnimation();
 				isCrashMoving = true;
 			}
 			else{
 				if (isStage2){
-					moveCrashX += crashMotion2;
+					moveCrashZ -= crashMotion2;
+					crashAnimation();
+					isCrashMoving = true;
+				}
+			}
+		}
+		CollectKey();
+		break;
+	case 'l':
+		//cout << collideCrash(35.21 - crashMotion, 54.6, 0.06) << "\n";
+		if (!colideCrashWithAllObjectsRight()){
+			if (isStage1){
+				if (rotateThirdPerson == 0){
+					moveCrashX -= crashMotion1;
+					crashRotate = -90;
+				}
+
+				else if (rotateThirdPerson == 1){
+					moveCrashZ += crashMotion1;
+					crashRotate = 0;
+				}
+
+				else if (rotateThirdPerson == 2){
+					moveCrashX += crashMotion1;
+					crashRotate = 90;
+				}
+
+				else if (rotateThirdPerson == 3){
+					moveCrashZ -= crashMotion1;
+					crashRotate = 180;
+				}
+
+				crashAnimation();
+				isCrashMoving = true;
+			}
+			else{
+				if (isStage2){
+					moveCrashX -= crashMotion2;
 					crashAnimation();
 					isCrashMoving = true;
 				}
@@ -1137,14 +1190,32 @@ void Keyboard(unsigned char key, int x, int y) {
 		//cout << collideCrash(35.21 + crashMotion, 54.6, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsLeft()){
 			if (isStage1){
-				moveCrashX += crashMotion1;
-				crashRotate = 90;
+				if (rotateThirdPerson == 0){
+					moveCrashX += crashMotion1;
+					crashRotate = 90;
+				}
+
+				else if (rotateThirdPerson == 1){
+					moveCrashZ -= crashMotion1;
+					crashRotate = 180;
+				}
+
+				else if (rotateThirdPerson == 2){
+					moveCrashX -= crashMotion1;
+					crashRotate = -90;
+				}
+
+				else if (rotateThirdPerson == 3){
+					moveCrashZ += crashMotion1;
+					crashRotate = 0;
+				}
+
 				crashAnimation();
 				isCrashMoving = true;
 			}
 			else{
 				if (isStage2){
-					moveCrashX -= crashMotion2;
+					moveCrashX += crashMotion2;
 					crashAnimation();
 					isCrashMoving = true;
 				}
@@ -2210,81 +2281,98 @@ void timer(int value)
 		crashIdleAnim += (crashAnimConstant * 0.00005);
 	}
 
-	if (!freeRoam && isThirdPersonView){
+	if (isStage1){
+		if (!freeRoam && isThirdPersonView){
 
-		if (rotateThirdPerson == 0){ // Back View
-			if (!colideCrashWithAllObjectsRight())
-				camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
+			if (rotateThirdPerson == 0){ // Back View
+				if (!colideCrashWithAllObjectsRight())
+					camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
 
-			else if (colideCrashWithAllObjectsRight())
-				camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+				else if (colideCrashWithAllObjectsRight())
+					camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
 
-			camera.center.y = 2.57471;
+				camera.center.y = 2.57471;
 
-			if (!colideCrashWithAllObjectsBackward())
-				camera.center.z = -51.1186 + getCrashPosZ();
+				if (!colideCrashWithAllObjectsBackward())
+					camera.center.z = -51.1186 + getCrashPosZ();
 
-			else
-				camera.center.z = -47.1186 + getCrashPosZ() + 6;
+				else
+					camera.center.z = -47.1186 + getCrashPosZ() + 6;
 
-			if (!colideCrashWithAllObjectsRight())
-				camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
+				if (!colideCrashWithAllObjectsRight())
+					camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
 
-			else if (colideCrashWithAllObjectsRight())
-				camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+				else if (colideCrashWithAllObjectsRight())
+					camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
 
-			camera.eye.y = 2.56383;
+				camera.eye.y = 2.56383;
 
-			if (!colideCrashWithAllObjectsBackward())
-				camera.eye.z = -52.1159 + getCrashPosZ();
-			else
-				camera.eye.z = -52.1159 + getCrashPosZ() + 6;
+				if (!colideCrashWithAllObjectsBackward())
+					camera.eye.z = -52.1159 + getCrashPosZ();
+				else
+					camera.eye.z = -52.1159 + getCrashPosZ() + 6;
 
-			camera.up.x = -0.00104444;
-			camera.up.y = 0.999941;
-			camera.up.z = -0.0108271;
+				camera.up.x = -0.00104444;
+				camera.up.y = 0.999941;
+				camera.up.z = -0.0108271;
+			}
+
+
+			else if (rotateThirdPerson == 1){ // Side View
+				camera.center.x = -22.8098 + getCrashPosX();
+				camera.center.y = 2.64848;
+				camera.center.z = -43.73961 + getCrashPosZ();
+				camera.eye.x = -23.8098 + getCrashPosX();
+				camera.eye.y = 2.64746;
+				camera.eye.z = -43.73675 + getCrashPosZ();
+				camera.up.x = -0.00104444;
+				camera.up.y = 0.999941;
+				camera.up.z = -0.0108271;
+
+				//crashMotion2*-1;
+			}
+
+
+			else if (rotateThirdPerson == 2){ // Front View
+				camera.center.x = -16.2835 + getCrashPosX();
+				camera.center.y = 2.71416;
+				camera.center.z = -38.30646 + getCrashPosZ();
+				camera.eye.x = -16.2807 + getCrashPosX();
+				camera.eye.y = 2.72499;
+				camera.eye.z = -37.30652 + getCrashPosZ();
+				camera.up.x = -0.00104444;
+				camera.up.y = 0.999941;
+				camera.up.z = -0.0108271;
+			}
+
+
+			else if (rotateThirdPerson == 3){ // Side View
+				camera.center.x = -9.7971 + getCrashPosX();
+				camera.center.y = 2.66066;
+				camera.center.z = -43.87042 + getCrashPosZ();
+				camera.eye.x = -8.7979 + getCrashPosX();
+				camera.eye.y = 2.66129;
+				camera.eye.z = -43.90818 + getCrashPosZ();
+				camera.up.x = -0.00104444;
+				camera.up.y = 0.999941;
+				camera.up.z = -0.0108271;
+			}
+
+
 		}
+	}
 
-
-		else if (rotateThirdPerson == 1){ // Side View
-			camera.center.x = -22.8098 + getCrashPosX();
-			camera.center.y = 2.64848;
-			camera.center.z = -43.73961 + getCrashPosZ();
-			camera.eye.x = -23.8098 + getCrashPosX();
-			camera.eye.y = 2.64746;
-			camera.eye.z = -43.73675 + getCrashPosZ();
-			camera.up.x = -0.00104444;
-			camera.up.y = 0.999941;
-			camera.up.z = -0.0108271;
-		}
-
-
-		else if (rotateThirdPerson == 2){ // Front View
-			camera.center.x = -16.2835 + getCrashPosX();
-			camera.center.y = 2.71416;
-			camera.center.z = -38.30646 + getCrashPosZ();
-			camera.eye.x = -16.2807 + getCrashPosX();
-			camera.eye.y = 2.72499;
-			camera.eye.z = -37.30652 + getCrashPosZ();
-			camera.up.x = -0.00104444;
-			camera.up.y = 0.999941;
-			camera.up.z = -0.0108271;
-		}
-
-
-		else if (rotateThirdPerson == 3){ // Side View
-			camera.center.x = -9.7971 + getCrashPosX();
-			camera.center.y = 2.66066;
-			camera.center.z = -43.87042 + getCrashPosZ();
-			camera.eye.x = -8.7979 + getCrashPosX();
-			camera.eye.y = 2.66129;
-			camera.eye.z = -43.90818 + getCrashPosZ();
-			camera.up.x = -0.00104444;
-			camera.up.y = 0.999941;
-			camera.up.z = -0.0108271;
-		}
-
-
+	else
+	{
+		camera.center.x = 19.0618 + getCrashPosX();
+		camera.center.y = 3.01877;
+		camera.center.z = 4.9398 + getCrashPosZ();
+		camera.eye.x = 19.0588 + getCrashPosX();
+		camera.eye.y = 3.21607;
+		camera.eye.z = 3.9594 + getCrashPosZ();
+		camera.up.x = -0.000422907;
+		camera.up.y = 0.980344;
+		camera.up.z = 0.197296;
 	}
 
 	glutTimerFunc(5, timer, value);

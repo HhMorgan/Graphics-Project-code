@@ -637,8 +637,8 @@ void setupLight5() {
 //=======================================================================
 //idle Function
 //=======================================================================
-bool isStage1 = 1;
-bool isStage2 = 0;
+bool isStage1 = 0;
+bool isStage2 = 1;
 bool isKey1 = 1;
 bool isKey2 = 1;
 bool isKey3 = 1;
@@ -648,7 +648,7 @@ bool isKey6 = 1;
 bool isCrash = 1;
 bool isGate1 = 0;
 bool isGate2 = 0;
-bool freeRoam = 0;
+bool freeRoam = 1;
 bool isCrashMoving = 0;
 bool initializeCamera = 1;
 bool isThirdPersonView = 1;
@@ -662,7 +662,7 @@ float moveCrashX = 0;
 float moveCrashY = 0;
 float moveCrashZ = 0;
 float crashMotion1 = 0.3;
-float crashMotion2 = 0.03;
+float crashMotion2 = 0.3;
 float moveBombX = 0.0;
 float moveBombY = 0.0;
 float moveSlimeX = 0.0;
@@ -814,22 +814,23 @@ bool colideCrashWithAllObjectsForward(){
 	}
 	if (isStage2){
 		//Walls
-		result |= collideCrashRectangle(34.905, 35.49 + crashMotion2, 1.725, 0.05);
-		result |= collideCrashRectangle(33.28, 32.94 + crashMotion2, 0.05, 2.76);
-		result |= collideCrashRectangle(36.6, 32.955 + crashMotion2, 0.05, 2.745);
-		result |= collideCrashRectangle(34.92, 30.52 + crashMotion2, 1.68, 0.05);
-		result |= collideCrashRectangle(34.925, 31.71 + crashMotion2, 0.05, 0.51);
-		result |= collideCrashRectangle(34.905, 32.16 + crashMotion2, 0.735, 0.05);
-		result |= collideCrashRectangle(35.73, 31.74 + crashMotion2, 0.84, 0.05);
-		result |= collideCrashRectangle(35.93, 32.76 + crashMotion2, 0.05, 0.52);
-		result |= collideCrashRectangle(36.255, 33.01 + crashMotion2, 0.405, 0.05);
-		result |= collideCrashRectangle(34.89, 33.37 + crashMotion2, 0.75, 0.05);
-		result |= collideCrashRectangle(34.92, 33.855 + crashMotion2, 0.05, 0.495);
-		result |= collideCrashRectangle(35.295, 34.38 + crashMotion2, 1.395, 0.05);
-		result |= collideCrashRectangle(34.14, 34.695 + crashMotion2, 0.05, 0.315);
-		result |= collideCrashRectangle(34.155, 35.37 + crashMotion2, 0.05, 0.18);
-		result |= collideCrashRectangle(33.54, 33 + crashMotion2, 0.39, 0.05);
-		result |= collideCrashRectangle(33.87, 32.76 + crashMotion2, 0.05, 0.51);
+		result |= collideCrashRectangle(62.1f, -4.500099999999996f + crashMotion2, 1.05, 50.700100000000006f);
+		result |= collideCrashRectangle(31.95f, 41.7f + crashMotion2, 31.349999999999998f, 1.05);
+		result |= collideCrashRectangle(2.1f, -4.500099999999996f + crashMotion2, 1.05, 50.700100000000006f);
+		result |= collideCrashRectangle(31.9f, -48.3001f + crashMotion2, 31.7f, 1.05);
+		result |= collideCrashRectangle(32.1f, -26.549950000000003f + crashMotion2, 1.05, 9.150050000000002f);
+		result |= collideCrashRectangle(47.25f, -26.0999f + crashMotion2, 16.049999999999997f, 1.05);
+		result |= collideCrashRectangle(32.1f, -18.2999f + crashMotion2, 13.5f, 1.05);
+		result |= collideCrashRectangle(50.1f, -7.649935000000001f + crashMotion2, 1.05, 9.149965f);
+		result |= collideCrashRectangle(61.099999999999994f, -3.29996f + crashMotion2, 2.1999999999999993f, 1.05);
+		result |= collideCrashRectangle(31.5f, 3.30003f + crashMotion2, 13.5f, 1.05);
+		result |= collideCrashRectangle(32.1f, 12.750015f + crashMotion2, 1.05, 9.449985f);
+		result |= collideCrashRectangle(13.2f, -7.649985000000001f + crashMotion2, 1.05, 8.850014999999999f);
+		result |= collideCrashRectangle(7.65f, -2.9996f + crashMotion2, 6.75f, 1.05);
+		result |= collideCrashRectangle(38.55f, 21.9f + crashMotion2, 25.35f, 1.05);
+		result |= collideCrashRectangle(18.0f, 26.7f + crashMotion2, 1.05, 5.699999999999999f);
+		result |= collideCrashRectangle(18.0f, 39.45f + crashMotion2, 1.05, 3.150000000000002f);
+
 		if (isGate2){
 			//Gate
 			result |= collideCrashRectangle(34.93, 30.865 + crashMotion2, 0.05, 0.365);
@@ -873,22 +874,23 @@ bool colideCrashWithAllObjectsBackward(){
 	}
 	if (isStage2){
 		//Walls
-		result |= collideCrashRectangle(34.905, 35.49 - crashMotion2, 1.725, 0.05);
-		result |= collideCrashRectangle(33.28, 32.94 - crashMotion2, 0.05, 2.76);
-		result |= collideCrashRectangle(36.6, 32.955 - crashMotion2, 0.05, 2.745);
-		result |= collideCrashRectangle(34.92, 30.52 - crashMotion2, 1.68, 0.05);
-		result |= collideCrashRectangle(34.925, 31.71 - crashMotion2, 0.05, 0.51);
-		result |= collideCrashRectangle(34.905, 32.16 - crashMotion2, 0.735, 0.05);
-		result |= collideCrashRectangle(35.73, 31.74 - crashMotion2, 0.84, 0.05);
-		result |= collideCrashRectangle(35.93, 32.76 - crashMotion2, 0.05, 0.52);
-		result |= collideCrashRectangle(36.255, 33.01 - crashMotion2, 0.405, 0.05);
-		result |= collideCrashRectangle(34.89, 33.37 - crashMotion2, 0.75, 0.05);
-		result |= collideCrashRectangle(34.92, 33.855 - crashMotion2, 0.05, 0.495);
-		result |= collideCrashRectangle(35.295, 34.38 - crashMotion2, 1.395, 0.05);
-		result |= collideCrashRectangle(34.14, 34.695 - crashMotion2, 0.05, 0.315);
-		result |= collideCrashRectangle(34.155, 35.37 - crashMotion2, 0.05, 0.18);
-		result |= collideCrashRectangle(33.54, 33 - crashMotion2, 0.39, 0.05);
-		result |= collideCrashRectangle(33.87, 32.76 - crashMotion2, 0.05, 0.51);
+		result |= collideCrashRectangle(62.1f, -4.500099999999996f - crashMotion2, 1.05, 50.700100000000006f);
+		result |= collideCrashRectangle(31.95f, 41.7f - crashMotion2, 31.349999999999998f, 1.05);
+		result |= collideCrashRectangle(2.1f, -4.500099999999996f - crashMotion2, 1.05, 50.700100000000006f);
+		result |= collideCrashRectangle(31.9f, -48.3001f - crashMotion2, 31.7f, 1.05);
+		result |= collideCrashRectangle(32.1f, -26.549950000000003f - crashMotion2, 1.05, 9.150050000000002f);
+		result |= collideCrashRectangle(47.25f, -26.0999f - crashMotion2, 16.049999999999997f, 1.05);
+		result |= collideCrashRectangle(32.1f, -18.2999f - crashMotion2, 13.5f, 1.05);
+		result |= collideCrashRectangle(50.1f, -7.649935000000001f - crashMotion2, 1.05, 9.149965f);
+		result |= collideCrashRectangle(61.099999999999994f, -3.29996f - crashMotion2, 2.1999999999999993f, 1.05);
+		result |= collideCrashRectangle(31.5f, 3.30003f - crashMotion2, 13.5f, 1.05);
+		result |= collideCrashRectangle(32.1f, 12.750015f - crashMotion2, 1.05, 9.449985f);
+		result |= collideCrashRectangle(13.2f, -7.649985000000001f - crashMotion2, 1.05, 8.850014999999999f);
+		result |= collideCrashRectangle(7.65f, -2.9996f - crashMotion2, 6.75f, 1.05);
+		result |= collideCrashRectangle(38.55f, 21.9f - crashMotion2, 25.35f, 1.05);
+		result |= collideCrashRectangle(18.0f, 26.7f - crashMotion2, 1.05, 5.699999999999999f);
+		result |= collideCrashRectangle(18.0f, 39.45f - crashMotion2, 1.05, 3.150000000000002f);
+
 		if (isGate2){
 			//Gate
 			result |= collideCrashRectangle(34.93, 30.865 - crashMotion2, 0.05, 0.365);
@@ -931,22 +933,23 @@ bool colideCrashWithAllObjectsRight(){
 	}
 	if (isStage2){
 		//Walls
-		result |= collideCrashRectangle(34.905 - crashMotion2, 35.49, 1.725, 0.05);
-		result |= collideCrashRectangle(33.28 - crashMotion2, 32.94, 0.05, 2.76);
-		result |= collideCrashRectangle(36.6 - crashMotion2, 32.955, 0.05, 2.745);
-		result |= collideCrashRectangle(34.92 - crashMotion2, 30.52, 1.68, 0.05);
-		result |= collideCrashRectangle(34.925 - crashMotion2, 31.71, 0.05, 0.51);
-		result |= collideCrashRectangle(34.905 - crashMotion2, 32.16, 0.735, 0.05);
-		result |= collideCrashRectangle(35.73 - crashMotion2, 31.74, 0.84, 0.05);
-		result |= collideCrashRectangle(35.93 - crashMotion2, 32.76, 0.05, 0.52);
-		result |= collideCrashRectangle(36.255 - crashMotion2, 33.01, 0.405, 0.05);
-		result |= collideCrashRectangle(34.89 - crashMotion2, 33.37, 0.75, 0.05);
-		result |= collideCrashRectangle(34.92 - crashMotion2, 33.855, 0.05, 0.495);
-		result |= collideCrashRectangle(35.295 - crashMotion2, 34.38, 1.395, 0.05);
-		result |= collideCrashRectangle(34.14 - crashMotion2, 34.695, 0.05, 0.315);
-		result |= collideCrashRectangle(34.155 - crashMotion2, 35.37, 0.05, 0.18);
-		result |= collideCrashRectangle(33.54 - crashMotion2, 33, 0.39, 0.05);
-		result |= collideCrashRectangle(33.87 - crashMotion2, 32.76, 0.05, 0.51);
+		result |= collideCrashRectangle(62.1f - crashMotion2, -4.500099999999996f, 1.05, 50.700100000000006f);
+		result |= collideCrashRectangle(31.95f - crashMotion2, 41.7f, 31.349999999999998f, 1.05);
+		result |= collideCrashRectangle(2.1f - crashMotion2, -4.500099999999996f, 1.05, 50.700100000000006f);
+		result |= collideCrashRectangle(31.9f - crashMotion2, -48.3001f, 31.7f, 1.05);
+		result |= collideCrashRectangle(32.1f - crashMotion2, -26.549950000000003f, 1.05, 9.150050000000002f);
+		result |= collideCrashRectangle(47.25f - crashMotion2, -26.0999f, 16.049999999999997f, 1.05);
+		result |= collideCrashRectangle(32.1f - crashMotion2, -18.2999f, 13.5f, 1.05);
+		result |= collideCrashRectangle(50.1f - crashMotion2, -7.649935000000001f, 1.05, 9.149965f);
+		result |= collideCrashRectangle(61.099999999999994f - crashMotion2, -3.29996f, 2.1999999999999993f, 1.05);
+		result |= collideCrashRectangle(31.5f - crashMotion2, 3.30003f, 13.5f, 1.05);
+		result |= collideCrashRectangle(32.1f - crashMotion2, 12.750015f, 1.05, 9.449985f);
+		result |= collideCrashRectangle(13.2f - crashMotion2, -7.649985000000001f, 1.05, 8.850014999999999f);
+		result |= collideCrashRectangle(7.65f - crashMotion2, -2.9996f, 6.75f, 1.05);
+		result |= collideCrashRectangle(38.55f - crashMotion2, 21.9f, 25.35f, 1.05);
+		result |= collideCrashRectangle(18.0f - crashMotion2, 26.7f, 1.05, 5.699999999999999f);
+		result |= collideCrashRectangle(18.0f - crashMotion2, 39.45f, 1.05, 3.150000000000002f);
+
 		if (isGate2){
 			//Gate
 			result |= collideCrashRectangle(34.93 - crashMotion2, 30.865, 0.05, 0.365);
@@ -989,22 +992,23 @@ bool colideCrashWithAllObjectsLeft(){
 	}
 	if (isStage2){
 		//Walls
-		result |= collideCrashRectangle(34.905 + crashMotion2, 35.49, 1.725, 0.05);
-		result |= collideCrashRectangle(33.28 + crashMotion2, 32.94, 0.05, 2.76);
-		result |= collideCrashRectangle(36.6 + crashMotion2, 32.955, 0.05, 2.745);
-		result |= collideCrashRectangle(34.92 + crashMotion2, 30.52, 1.68, 0.05);
-		result |= collideCrashRectangle(34.925 + crashMotion2, 31.71, 0.05, 0.51);
-		result |= collideCrashRectangle(34.905 + crashMotion2, 32.16, 0.735, 0.05);
-		result |= collideCrashRectangle(35.73 + crashMotion2, 31.74, 0.84, 0.05);
-		result |= collideCrashRectangle(35.93 + crashMotion2, 32.76, 0.05, 0.52);
-		result |= collideCrashRectangle(36.255 + crashMotion2, 33.01, 0.405, 0.05);
-		result |= collideCrashRectangle(34.89 + crashMotion2, 33.37, 0.75, 0.05);
-		result |= collideCrashRectangle(34.92 + crashMotion2, 33.855, 0.05, 0.495);
-		result |= collideCrashRectangle(35.295 + crashMotion2, 34.38, 1.395, 0.05);
-		result |= collideCrashRectangle(34.14 + crashMotion2, 34.695, 0.05, 0.315);
-		result |= collideCrashRectangle(34.155 + crashMotion2, 35.37, 0.05, 0.18);
-		result |= collideCrashRectangle(33.54 + crashMotion2, 33, 0.39, 0.05);
-		result |= collideCrashRectangle(33.87 + crashMotion2, 32.76, 0.05, 0.51);
+		result |= collideCrashRectangle(62.1f + crashMotion2, -4.500099999999996f, 1.05, 50.700100000000006f);
+		result |= collideCrashRectangle(31.95f + crashMotion2, 41.7f, 31.349999999999998f, 1.05);
+		result |= collideCrashRectangle(2.1f + crashMotion2, -4.500099999999996f, 1.05, 50.700100000000006f);
+		result |= collideCrashRectangle(31.9f + crashMotion2, -48.3001f, 31.7f, 1.05);
+		result |= collideCrashRectangle(32.1f + crashMotion2, -26.549950000000003f, 1.05, 9.150050000000002f);
+		result |= collideCrashRectangle(47.25f + crashMotion2, -26.0999f, 16.049999999999997f, 1.05);
+		result |= collideCrashRectangle(32.1f + crashMotion2, -18.2999f, 13.5f, 1.05);
+		result |= collideCrashRectangle(50.1f + crashMotion2, -7.649935000000001f, 1.05, 9.149965f);
+		result |= collideCrashRectangle(61.099999999999994f + crashMotion2, -3.29996f, 2.1999999999999993f, 1.05);
+		result |= collideCrashRectangle(31.5f + crashMotion2, 3.30003f, 13.5f, 1.05);
+		result |= collideCrashRectangle(32.1f + crashMotion2, 12.750015f, 1.05, 9.449985f);
+		result |= collideCrashRectangle(13.2f + crashMotion2, -7.649985000000001f, 1.05, 8.850014999999999f);
+		result |= collideCrashRectangle(7.65f + crashMotion2, -2.9996f, 6.75f, 1.05);
+		result |= collideCrashRectangle(38.55f + crashMotion2, 21.9f, 25.35f, 1.05);
+		result |= collideCrashRectangle(18.0f + crashMotion2, 26.7f, 1.05, 5.699999999999999f);
+		result |= collideCrashRectangle(18.0f + crashMotion2, 39.45f, 1.05, 3.150000000000002f);
+
 		if (isGate2){
 			//Gate
 			result |= collideCrashRectangle(34.93 + crashMotion2, 30.865, 0.05, 0.365);
@@ -1482,7 +1486,49 @@ void myDisplay(void) {
 		glPopMatrix();
 
 		if (isCrash){
-			//Draw Crash
+			/////////////////////////
+			glPushMatrix();
+			glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
+			glTranslatef(55, -0.15, 45);
+			glScaled(18, 18, 18);
+
+
+			//glRotatef(90.0, 1, 0, 0);
+			glRotatef(crashRotate, 0, 1, 0);
+			//glRotatef(205.f, 0, 0, 1);
+			glScaled(0.001, 0.001, 0.001);
+			glScaled(crashIdleAnim, crashIdleAnim, crashIdleAnim);
+			glPushMatrix();
+			//glRotated(crashAnim, 0, 1, 0); // Animate the body? Yes or No? y = 1 looks nice and x = 1 looks nice too
+			crash.Draw();
+			glPopMatrix();
+			glPushMatrix();
+			glRotated(crashAnim, 0, 1, 0); // Animate the right arm
+			crash_right_arm.Draw();
+			glPopMatrix();
+
+			glPushMatrix();
+			glRotated(crashAnim, 0, 1, 0);
+			crash_left_arm.Draw();
+			glPopMatrix();
+
+			glPushMatrix();
+			glRotated(crashAnim, 1, 0, 0);
+			glTranslated(0, 0.1, 0);
+			crash_right_leg.Draw();
+			glPopMatrix();
+
+			glPushMatrix();
+			glRotated(crashAnim, -1, 0, 0);
+			glTranslated(0, 0.1, 0);
+			crash_left_leg.Draw();
+			glPopMatrix();
+
+			glPopMatrix();
+
+
+			/////////////////////
+			/*//Draw Crash
 			glPushMatrix();
 			glTranslatef(55, -0.15, 45);
 			glScaled(18, 18, 18);
@@ -1491,7 +1537,7 @@ void myDisplay(void) {
 			glRotatef(205.f, 0, 0, 1);
 			glScaled(0.001, 0.001, 0.001);
 			crash.Draw();
-			glPopMatrix();
+			glPopMatrix();*/
 		}
 
 		//wall

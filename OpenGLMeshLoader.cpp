@@ -330,6 +330,10 @@ Model_3DS griver;
 Model_3DS slime;
 Model_3DS bomb;
 Model_3DS crash;
+Model_3DS crash_right_arm;
+Model_3DS crash_left_arm;
+Model_3DS crash_right_leg;
+Model_3DS crash_left_leg;
 Model_3DS wall;
 Model_3DS grass;
 Model_3DS station;
@@ -644,7 +648,16 @@ bool isKey6 = 1;
 bool isCrash = 1;
 bool isGate1 = 0;
 bool isGate2 = 0;
+bool freeRoam = 0;
+bool isCrashMoving = 0;
 bool initializeCamera = 1;
+bool isThirdPersonView = 1;
+float crashAnim = 5;
+float crashAnimConstant = 1.5;
+float rotateCamera = 0;
+float rotateCameraConstant = 0.1;
+float crashIdleAnim = 1.005;
+float crashRotate = 0;
 float moveCrashX = 0;
 float moveCrashY = 0;
 float moveCrashZ = 0;
@@ -680,6 +693,15 @@ bool collideCrashRectangle(float x, float z, float sidex, float sidez){
 
 bool collideCrashSquare(float x, float z, float side){
 	return collideCrashRectangle(x, z, side, side);
+}
+
+void crashAnimation(){
+	if (crashAnim > 5)
+		crashAnimConstant *= -1;
+	else if (crashAnim < -5)
+		crashAnimConstant *= -1;
+
+	crashAnim += crashAnimConstant;
 }
 
 bool keysFunction(){
@@ -1045,67 +1067,109 @@ void Keyboard(unsigned char key, int x, int y) {
 	case 'e':
 		camera.moveZ(-d);
 		break;
+
+		/////////////////////////////////////////////////////////////
 	case 'i':
 		//cout << collideCrash(35.21, 54.6 + crashMotion,0.06) << "\n";
 		if (!colideCrashWithAllObjectsForward()){
 			if (isStage1){
 				moveCrashZ += crashMotion1;
+				crashRotate = 0;
+				crashAnimation();
+				isCrashMoving = true;
 			}
 			else{
 				if (isStage2){
 					moveCrashZ -= crashMotion2;
+					crashAnimation();
+					isCrashMoving = true;
 				}
 			}
 		}
 		CollectKey();
-		//cout << "Collection of Key" << CollectKey()<< "\n";
 		break;
 	case 'k':
 		//cout << collideCrash(35.21, 54.6 - crashMotion, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsBackward()){
 			if (isStage1){
 				moveCrashZ -= crashMotion1;
+				crashRotate = 180;
+				crashAnimation();
+				isCrashMoving = true;
 			}
 			else{
 				if (isStage2){
 					moveCrashZ += crashMotion2;
+					crashAnimation();
+					isCrashMoving = true;
 				}
 			}
 		}
 		CollectKey();
-		//cout << "Collection of Key" << CollectKey() << "\n";
-		//camera.moveZ(-cameraMotion);
 		break;
 	case 'l':
 		//cout << collideCrash(35.21 - crashMotion, 54.6, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsRight()){
 			if (isStage1){
 				moveCrashX -= crashMotion1;
+				crashRotate = -90;
+				crashAnimation();
+				isCrashMoving = true;
 			}
 			else{
 				if (isStage2){
 					moveCrashX += crashMotion2;
+					crashAnimation();
+					isCrashMoving = true;
 				}
 			}
 		}
 		CollectKey();
-		//cout << "Collection of Key" << CollectKey() << "\n";
 		break;
 	case 'j':
 		//cout << collideCrash(35.21 + crashMotion, 54.6, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsLeft()){
 			if (isStage1){
 				moveCrashX += crashMotion1;
+				crashRotate = 90;
+				crashAnimation();
+				isCrashMoving = true;
 			}
 			else{
 				if (isStage2){
 					moveCrashX -= crashMotion2;
+					crashAnimation();
+					isCrashMoving = true;
 				}
 			}
 		}
 		CollectKey();
-		//cout << "Collection of Key" << CollectKey() << "\n";
 		break;
+
+	case 'v':
+		isThirdPersonView = !isThirdPersonView;
+		break;
+
+	case 'b':
+		if (rotateCamera > 4)
+			rotateCameraConstant *= -1;
+		if (rotateCamera < -4)
+			rotateCameraConstant *= -1;
+
+		rotateCamera += rotateCameraConstant;
+		break;
+
+	case 'f':
+		freeRoam = !freeRoam;
+
+		if (!freeRoam)
+			isThirdPersonView = true;
+
+		break;
+
+
+		/////////////////////////////////////////////////////////////
+
 	case GLUT_KEY_ESCAPE:
 		exit(EXIT_SUCCESS);
 	}
@@ -1207,15 +1271,42 @@ void myDisplay(void) {
 	//Draw Level 1
 	if (isStage1){
 		if (isCrash){
-			// Draw crash
 			glPushMatrix();
 			glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
 			glTranslatef(19, -0.15, -10);
 			glScaled(18, 18, 18);
-			glRotatef(90.0, 1, 0, 0);
+
+			//glRotatef(90.0, 1, 0, 0);
+			glRotatef(crashRotate, 0, 1, 0);
 			//glRotatef(205.f, 0, 0, 1);
 			glScaled(0.001, 0.001, 0.001);
+			glScaled(crashIdleAnim, crashIdleAnim, crashIdleAnim);
+			glPushMatrix();
+			//glRotated(crashAnim, 0, 1, 0); // Animate the body? Yes or No? y = 1 looks nice and x = 1 looks nice too
 			crash.Draw();
+			glPopMatrix();
+			glPushMatrix();
+			glRotated(crashAnim, 0, 1, 0); // Animate the right arm
+			crash_right_arm.Draw();
+			glPopMatrix();
+
+			glPushMatrix();
+			glRotated(crashAnim, 0, 1, 0);
+			crash_left_arm.Draw();
+			glPopMatrix();
+
+			glPushMatrix();
+			glRotated(crashAnim, 1, 0, 0);
+			glTranslated(0, 0.1, 0);
+			crash_right_leg.Draw();
+			glPopMatrix();
+
+			glPushMatrix();
+			glRotated(crashAnim, -1, 0, 0);
+			glTranslated(0, 0.1, 0);
+			crash_left_leg.Draw();
+			glPopMatrix();
+
 			glPopMatrix();
 		}
 
@@ -1956,7 +2047,11 @@ void LoadAssets()
 	station.Load("Models/station/Computer Panel/main_panel_ma01.3ds");
 	gate.Load("Models/gate/Gate 2/Gate_01.3DS");
 	key.Load("Models/collect/KingdomKey/KingdomKey.3ds");
-	crash.Load("Models/crash/crashbandicoot.3ds");
+	crash.Load("Models/crash/body.3ds");
+	crash_right_arm.Load("Models/crash/rightarm.3ds");
+	crash_left_arm.Load("Models/crash/leftarm.3ds");
+	crash_right_leg.Load("Models/crash/rightleg.3ds");
+	crash_left_leg.Load("Models/crash/leftleg.3ds");
 
 	loadBMP(&tex, "Textures/sky4-jpg.bmp", true);
 }
@@ -1996,6 +2091,70 @@ void cameraAnim(int value) {
 	glutTimerFunc(1, cameraAnim, 0);
 
 }
+void thirdPersonView(){
+
+	// Third Person View
+
+	if (!colideCrashWithAllObjectsRight())
+		camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
+
+	else if (colideCrashWithAllObjectsRight())
+		camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+
+	camera.center.y = 2.57471;
+	camera.center.z = -51.1186 + getCrashPosZ();
+
+	if (!colideCrashWithAllObjectsRight())
+		camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
+
+	else if (colideCrashWithAllObjectsRight())
+		camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+
+	camera.eye.y = 2.56383;
+	camera.eye.z = -52.1159 + getCrashPosZ();
+	camera.up.x = -0.00104444;
+	camera.up.y = 0.999941;
+	camera.up.z = -0.0108271;
+}
+
+void firstPersonView()
+{
+
+	// First Person View
+
+	camera.center.x = -16.0318 + getCrashPosX() + rotateCamera;
+	//camera.center.y = 2.45376;
+	camera.center.z = -42.77647 + getCrashPosZ();
+	camera.eye.x = -16.0696 + getCrashPosX();
+	//camera.eye.y = 2.44289;
+	camera.eye.z = -43.7757 + getCrashPosZ();
+	camera.up.x = -0.00104502;
+	//camera.up.y = 0.999941;
+	camera.up.z = -0.0108352;
+}
+
+void timer(int value)
+{
+	if (!freeRoam){
+		if (isThirdPersonView)
+			thirdPersonView();
+		else
+			firstPersonView();
+	}
+
+	if (!isCrashMoving){
+		crashAnim = 0;
+		if (crashIdleAnim > 1.005)
+			crashAnimConstant *= -1;
+		else if (crashIdleAnim < 1)
+			crashAnimConstant *= -1;
+
+		crashIdleAnim += (crashAnimConstant * 0.00005);
+	}
+
+	glutTimerFunc(5, timer, value);
+	glutPostRedisplay();
+}
 
 //=======================================================================
 // Main Function
@@ -2021,6 +2180,7 @@ void main(int argc, char** argv)
 	glutSpecialFunc(Special);
 
 	glutIdleFunc(idle);
+	glutTimerFunc(0, timer, 0);
 	//glutMotionFunc(myMotion);
 
 	//glutMouseFunc(myMouse);

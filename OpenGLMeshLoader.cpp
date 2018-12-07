@@ -76,6 +76,7 @@ using namespace std;
 GLuint tex;
 char title[] = "3D Model Loader Sample";
 
+int score = 0;
 // 3D Projection Options
 GLdouble fovy = 45.0;
 GLdouble aspectRatio = (GLdouble)WIDTH / (GLdouble)HEIGHT;
@@ -89,6 +90,8 @@ GLTexture tex_bar2;
 
 //--------------------------------------------------------------------------------------------------------------------------------
 
+int numberOfDeaths = 0;
+int scoreMultiplyer = 3;
 class Vector3f {
 public:
 	float x, y, z;
@@ -393,6 +396,18 @@ void InitMaterial()
 
 }
 
+
+
+void scoreMultiplerTimer(int value)
+{
+
+	if (scoreMultiplyer != 0.5){
+		scoreMultiplyer -= 0.5;
+		glutTimerFunc(60 * 1000, scoreMultiplerTimer, 0);
+	}
+}
+
+
 //=======================================================================
 // OpengGL Configuration Function
 //=======================================================================
@@ -662,6 +677,23 @@ float getCrashPosZ(){
 	return moveCrashZ + 35 + 0.1;;
 }
 
+void print(double x, double y, double z, char *string)
+{
+	int len, i;
+
+	//set the position of the text in the window using the x and y coordinates
+	glRasterPos3f(x, y,z);
+
+	//get the length of the string to display
+	len = (int)strlen(string);
+
+	//loop to display character by character
+	for (i = 0; i < len; i++)
+	{
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
+	}
+}
+
 bool collideCrashRectangle(float x, float z, float sidex, float sidez){
 	float crashCurrentX = getCrashPosX();
 	float crashCurrentZ = getCrashPosZ();
@@ -687,11 +719,15 @@ bool keysFunction(){
 	if (isStage1){
 		result1 |= collideCrashSquare(46.2, 54.6, 0.75);
 		result2 |= collideCrashSquare(22.2, 69.6, 0.75);
-		if (result1){
+		if (result1 & isKey1){
 			isKey1 = 0;
+			score += 1000;
+
 		}
-		if (result2){
+		if (result2 & isKey2){
 			isKey2 = 0;
+			score += 1000;
+
 		}
 	}
 	if (isStage2){
@@ -699,17 +735,25 @@ bool keysFunction(){
 		result4 |= collideCrashSquare(35.1, 34.08, 0.03);
 		result5 |= collideCrashSquare(33.6, 32.79, 0.03);
 		result6 |= collideCrashSquare(36.27, 32.79, 0.03);
-		if (result3){
+		if (result3 & isKey3){
 			isKey3 = 0;
+			score += 1000;
+
 		}
-		if (result4){
+		if (result4 & isKey4){
 			isKey4 = 0;
+			score += 1000;
+
 		}
-		if (result5){
+		if (result5 & isKey5){
 			isKey5 = 0;
+			score += 1000;
+
 		}
-		if (result6){
+		if (result6 & isKey6){
 			isKey6 = 0;
+			score += 1000;
+
 		}
 	}
 	return result1 | result2 | result3 | result4 | result5 | result6;
@@ -943,6 +987,13 @@ bool colideCrashWithAllObjectsLeft(){
 void idle() {
 
 }
+
+void scoreScreenTransation(int value)
+{
+	isStage2 = 1;
+}
+
+
 void Keyboard(unsigned char key, int x, int y) {
 	float d = 2;
 	float cameraMotion = 0.53;
@@ -1038,6 +1089,19 @@ void Keyboard(unsigned char key, int x, int y) {
 		cout << "Collection of Key" << CollectKey() << "\n";
 		//camera.moveX(-cameraMotion);
 		break;
+	case 'z':
+		//cout << collideCrash(35.21 - crashMotion, 54.6, 0.06) << "\n";
+		score += 5000;
+		if (isStage1){
+			isStage1 = 0;
+			glutTimerFunc(30 * 1000, scoreScreenTransation, 0);
+
+		}
+		else if (isStage2){
+			isStage2 = 0;
+	}
+		//camera.moveX(-cameraMotion);
+		break;
 	case 'j':
 		//cout << collideCrash(35.21 + crashMotion, 54.6, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsLeft()){
@@ -1130,10 +1194,65 @@ void myDisplay(void) {
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lightIntensity);
 
+	if (!isStage1 && !isStage2){
+		
+		camera.center.x = 18.1594;
+		camera.center.y = 2.57471;
+		camera.center.z = -15.7186;
+		camera.eye.x = 18.0868;
+		camera.eye.y = 2.56383;
+		camera.eye.z = -16.7159;
+		camera.up.x = -0.00104444;
+		camera.up.y = 0.999941;
+		camera.up.z = -0.0108271;
+
+		print(19.2, 5, -10, "Stage Clear!!");
+
+
+		glTranslatef(.1, -1, 0);
+		print(19, 5, -10, "Rank:");
+
+		char* rank;
+		if (scoreMultiplyer == 3)
+			rank = "S";
+		if (scoreMultiplyer == 2.5)
+			rank = "A";
+		if (scoreMultiplyer == 2)
+			rank = "B";
+		if (scoreMultiplyer == 1.5)
+			rank = "C";
+		if (scoreMultiplyer == 1)
+			rank = "D";
+		if (scoreMultiplyer == 0.5)
+			rank = "F";
+
+		print(18.5, 4.98, -10, rank);
+
+
+
+		print(19, 4.5, -10, "Score:");
+
+		char str[20] = { 0 };
+		sprintf_s(str, "%d", score*scoreMultiplyer);
+
+		print(18.5, 4.49, -10, str);
+
+		print(19.5, 4, -10, "Number of Deaths:");
+
+		char str2[20] = { 0 };
+		sprintf_s(str2, "%d", numberOfDeaths);
+
+		print(18, 3.96, -10, str2);
+
+		scoreMultiplyer = 3;
+	}
+
 	//Draw Level 1
 	if (isStage1){
-		// Draw crash
+
+		// draw crash
 		glPushMatrix();
+
 		glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
 		glTranslatef(19, -0.15, -10);
 		glScaled(18, 18, 18);
@@ -1801,6 +1920,8 @@ camera.up.z = -0.999021;
 */
 //=======================================================================
 boolean initializeCamera = 1;
+
+
 void setupCamera() {
 
 	if (initializeCamera){
@@ -1961,6 +2082,6 @@ void main(int argc, char** argv)
 
 	glutTimerFunc(0, lightColorAnim, 0);
 	glutTimerFunc(0, cameraAnim, 0);
-
+	glutTimerFunc(60 * 1000, scoreMultiplerTimer, 0);
 	glutMainLoop();
 }

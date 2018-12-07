@@ -1701,7 +1701,7 @@ void timer(int value)
 		else if (crashIdleAnim < 1)
 			crashAnimConstant *= -1;
 
-		crashIdleAnim += (crashAnimConstant * 0.0005);
+		crashIdleAnim += (crashAnimConstant * 0.00005);
 	}
 
 	glutTimerFunc(5, timer, value);

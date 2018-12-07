@@ -721,11 +721,12 @@ bool keysFunction(){
 			isKey2 = 0;
 		}
 	}
+
 	if (isStage2){
-		result3 |= collideCrashSquare(36.20, 34.62, 0.03);
-		result4 |= collideCrashSquare(35.1, 34.08, 0.03);
-		result5 |= collideCrashSquare(33.6, 32.79, 0.03);
-		result6 |= collideCrashSquare(36.27, 32.79, 0.03);
+		result3 |= collideCrashSquare(54.9, 26.1, 0.75);
+		result4 |= collideCrashSquare(35.1, 15.9, 0.75);
+		result5 |= collideCrashSquare(8.10002, -7.19994, 0.75);
+		result6 |= collideCrashSquare(56.1, -7.19994, 0.75);
 		if (result3){
 			isKey3 = 0;
 		}
@@ -759,13 +760,13 @@ bool isCrashDead(){
 	}
 	if (isStage2){
 		//Griever1
-		result |= collideCrashSquare(34.26, 33.69, 0.05);
+		result |= collideCrashSquare(19.8, 9.60002, 1.05);
 
 		//Griever2
-		result |= collideCrashSquare(35.91, 33.72, 0.05);
+		result |= collideCrashSquare(50.1, 9.90001, 1.05);
 
 		//Diablos
-		result |= collideCrashSquare(34.8, 32.79, 0.05);
+		result |= collideCrashSquare(30, -6.89994, 1.05);
 	}
 	return result;
 }
@@ -776,7 +777,7 @@ bool stageEnd(){
 		result |= collideCrashSquare(34.74, 86.9699, 1.05);
 	}
 	if (isStage2){
-		result |= collideCrashSquare(35.94, 30.84, 0.05);
+		result |= collideCrashSquare(50.1, -42.3, 0.05);
 	}
 	return result;
 }
@@ -822,7 +823,7 @@ bool colideCrashWithAllObjectsForward(){
 		result |= collideCrashRectangle(47.25f, -26.0999f + crashMotion2, 16.049999999999997f, 1.05);
 		result |= collideCrashRectangle(32.1f, -18.2999f + crashMotion2, 13.5f, 1.05);
 		result |= collideCrashRectangle(50.1f, -7.649935000000001f + crashMotion2, 1.05, 9.149965f);
-		result |= collideCrashRectangle(61.099999999999994f, -3.29996f + crashMotion2, 2.1999999999999993f, 1.05);
+		result |= collideCrashRectangle(56.099999999999994f, -3.29996f + crashMotion2, 7.199999999999999f, 1.05);
 		result |= collideCrashRectangle(31.5f, 3.30003f + crashMotion2, 13.5f, 1.05);
 		result |= collideCrashRectangle(32.1f, 12.750015f + crashMotion2, 1.05, 9.449985f);
 		result |= collideCrashRectangle(13.2f, -7.649985000000001f + crashMotion2, 1.05, 8.850014999999999f);
@@ -882,7 +883,7 @@ bool colideCrashWithAllObjectsBackward(){
 		result |= collideCrashRectangle(47.25f, -26.0999f - crashMotion2, 16.049999999999997f, 1.05);
 		result |= collideCrashRectangle(32.1f, -18.2999f - crashMotion2, 13.5f, 1.05);
 		result |= collideCrashRectangle(50.1f, -7.649935000000001f - crashMotion2, 1.05, 9.149965f);
-		result |= collideCrashRectangle(61.099999999999994f, -3.29996f - crashMotion2, 2.1999999999999993f, 1.05);
+		result |= collideCrashRectangle(56.099999999999994f, -3.29996f - crashMotion2, 7.199999999999999f, 1.05);
 		result |= collideCrashRectangle(31.5f, 3.30003f - crashMotion2, 13.5f, 1.05);
 		result |= collideCrashRectangle(32.1f, 12.750015f - crashMotion2, 1.05, 9.449985f);
 		result |= collideCrashRectangle(13.2f, -7.649985000000001f - crashMotion2, 1.05, 8.850014999999999f);
@@ -941,7 +942,7 @@ bool colideCrashWithAllObjectsRight(){
 		result |= collideCrashRectangle(47.25f - crashMotion2, -26.0999f, 16.049999999999997f, 1.05);
 		result |= collideCrashRectangle(32.1f - crashMotion2, -18.2999f, 13.5f, 1.05);
 		result |= collideCrashRectangle(50.1f - crashMotion2, -7.649935000000001f, 1.05, 9.149965f);
-		result |= collideCrashRectangle(61.099999999999994f - crashMotion2, -3.29996f, 2.1999999999999993f, 1.05);
+		result |= collideCrashRectangle(56.099999999999994f - crashMotion2, -3.29996f, 7.199999999999999f, 1.05);
 		result |= collideCrashRectangle(31.5f - crashMotion2, 3.30003f, 13.5f, 1.05);
 		result |= collideCrashRectangle(32.1f - crashMotion2, 12.750015f, 1.05, 9.449985f);
 		result |= collideCrashRectangle(13.2f - crashMotion2, -7.649985000000001f, 1.05, 8.850014999999999f);
@@ -1000,7 +1001,7 @@ bool colideCrashWithAllObjectsLeft(){
 		result |= collideCrashRectangle(47.25f + crashMotion2, -26.0999f, 16.049999999999997f, 1.05);
 		result |= collideCrashRectangle(32.1f + crashMotion2, -18.2999f, 13.5f, 1.05);
 		result |= collideCrashRectangle(50.1f + crashMotion2, -7.649935000000001f, 1.05, 9.149965f);
-		result |= collideCrashRectangle(61.099999999999994f + crashMotion2, -3.29996f, 2.1999999999999993f, 1.05);
+		result |= collideCrashRectangle(56.099999999999994f + crashMotion2, -3.29996f, 7.199999999999999f, 1.05);
 		result |= collideCrashRectangle(31.5f + crashMotion2, 3.30003f, 13.5f, 1.05);
 		result |= collideCrashRectangle(32.1f + crashMotion2, 12.750015f, 1.05, 9.449985f);
 		result |= collideCrashRectangle(13.2f + crashMotion2, -7.649985000000001f, 1.05, 8.850014999999999f);

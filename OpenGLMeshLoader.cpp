@@ -641,6 +641,10 @@ bool isKey3 = 1;
 bool isKey4 = 1;
 bool isKey5 = 1;
 bool isKey6 = 1;
+bool isCrash = 1;
+bool isGate1 = 0;
+bool isGate2 = 0;
+bool initializeCamera = 1;
 float moveCrashX = 0;
 float moveCrashY = 0;
 float moveCrashZ = 0;
@@ -654,6 +658,7 @@ float moveGriverX = 0.0;
 float moveGriverY = 0.0;
 float moveDiablosX = 0.0;
 float moveDiablosY = 0.0;
+
 float getCrashPosX(){
 	return moveCrashX + 35 + 0.1;;
 }
@@ -722,6 +727,37 @@ bool CollectKey(){
 	return result;
 }
 
+bool isCrashDead(){
+	bool result = 0;
+	if (isStage1){
+		//Slime
+		result |= collideCrashRectangle(22.05, 62.7, 2.25, 1.05);
+		//Bomb
+		result |= collideCrashSquare(46.2, 61.8, 1.05);
+	}
+	if (isStage2){
+		//Griever1
+		result |= collideCrashSquare(34.26, 33.69, 0.05);
+
+		//Griever2
+		result |= collideCrashSquare(35.91, 33.72, 0.05);
+
+		//Diablos
+		result |= collideCrashSquare(34.8, 32.79, 0.05);
+	}
+	return result;
+}
+
+bool stageEnd(){
+	bool result = 0;
+	if (isStage1){
+		result |= collideCrashSquare(34.74, 86.9699, 1.05);
+	}
+	if (isStage2){
+		result |= collideCrashSquare(35.94, 30.84, 0.05);
+	}
+	return result;
+}
 
 bool colideCrashWithAllObjectsForward(){
 	bool result = 0;
@@ -748,8 +784,10 @@ bool colideCrashWithAllObjectsForward(){
 		result |= collideCrashRectangle(22.35, 75 - crashMotion1, 4.35, 1.05);
 		//left perpendicular gate
 		result |= collideCrashRectangle(45.9, 75 - crashMotion1, 6.3, 1.05);
-		//Gate
-		result |= collideCrashRectangle(33.75, 75 - crashMotion1, 7.65, 1.05);
+		if (isGate1){
+			//Gate
+			result |= collideCrashRectangle(33.75, 75 - crashMotion1, 7.65, 1.05);
+		}
 
 	}
 	if (isStage2){
@@ -770,8 +808,11 @@ bool colideCrashWithAllObjectsForward(){
 		result |= collideCrashRectangle(34.155, 35.37 + crashMotion2, 0.05, 0.18);
 		result |= collideCrashRectangle(33.54, 33 + crashMotion2, 0.39, 0.05);
 		result |= collideCrashRectangle(33.87, 32.76 + crashMotion2, 0.05, 0.51);
-		//Gate
-		result |= collideCrashRectangle(34.93, 30.865 + crashMotion2, 0.05, 0.365);
+		if (isGate2){
+			//Gate
+			result |= collideCrashRectangle(34.93, 30.865 + crashMotion2, 0.05, 0.365);
+		}
+
 	}
 	//cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
@@ -803,9 +844,10 @@ bool colideCrashWithAllObjectsBackward(){
 		result |= collideCrashRectangle(22.35, 75 + crashMotion1, 4.35, 1.05);
 		//left perpendicular gate
 		result |= collideCrashRectangle(45.9, 75 + crashMotion1, 6.3, 1.05);
-		//Gate
-		result |= collideCrashRectangle(33.75, 75 + crashMotion1, 7.65, 1.05);
-
+		if (isGate1){
+			//Gate
+			result |= collideCrashRectangle(33.75, 75 + crashMotion1, 7.65, 1.05);
+		}
 	}
 	if (isStage2){
 		//Walls
@@ -825,8 +867,10 @@ bool colideCrashWithAllObjectsBackward(){
 		result |= collideCrashRectangle(34.155, 35.37 - crashMotion2, 0.05, 0.18);
 		result |= collideCrashRectangle(33.54, 33 - crashMotion2, 0.39, 0.05);
 		result |= collideCrashRectangle(33.87, 32.76 - crashMotion2, 0.05, 0.51);
-		//Gate
-		result |= collideCrashRectangle(34.93, 30.865 - crashMotion2, 0.05, 0.365);
+		if (isGate2){
+			//Gate
+			result |= collideCrashRectangle(34.93, 30.865 - crashMotion2, 0.05, 0.365);
+		}
 	}
 	//cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
@@ -857,8 +901,10 @@ bool colideCrashWithAllObjectsRight(){
 		result |= collideCrashRectangle(22.35 + crashMotion1, 75, 4.35, 1.05);
 		//left perpendicular gate
 		result |= collideCrashRectangle(45.9 + crashMotion1, 75, 6.3, 1.05);
-		//Gate
-		result |= collideCrashRectangle(33.75 + crashMotion1, 75, 7.65, 1.05);
+		if (isGate1){
+			//Gate
+			result |= collideCrashRectangle(33.75 + crashMotion1, 75, 7.65, 1.05);
+		}
 
 	}
 	if (isStage2){
@@ -879,8 +925,10 @@ bool colideCrashWithAllObjectsRight(){
 		result |= collideCrashRectangle(34.155 - crashMotion2, 35.37, 0.05, 0.18);
 		result |= collideCrashRectangle(33.54 - crashMotion2, 33, 0.39, 0.05);
 		result |= collideCrashRectangle(33.87 - crashMotion2, 32.76, 0.05, 0.51);
-		//Gate
-		result |= collideCrashRectangle(34.93 - crashMotion2, 30.865, 0.05, 0.365);
+		if (isGate2){
+			//Gate
+			result |= collideCrashRectangle(34.93 - crashMotion2, 30.865, 0.05, 0.365);
+		}
 	}
 	//cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
@@ -911,8 +959,10 @@ bool colideCrashWithAllObjectsLeft(){
 		result |= collideCrashRectangle(22.35 - crashMotion1, 75, 4.35, 1.05);
 		//left perpendicular gate
 		result |= collideCrashRectangle(45.9 - crashMotion1, 75, 6.3, 1.05);
-		//Gate
-		result |= collideCrashRectangle(33.75 - crashMotion1, 75, 7.65, 1.05);
+		if (isGate1){
+			//Gate
+			result |= collideCrashRectangle(33.75 - crashMotion1, 75, 7.65, 1.05);
+		}
 
 	}
 	if (isStage2){
@@ -933,8 +983,10 @@ bool colideCrashWithAllObjectsLeft(){
 		result |= collideCrashRectangle(34.155 + crashMotion2, 35.37, 0.05, 0.18);
 		result |= collideCrashRectangle(33.54 + crashMotion2, 33, 0.39, 0.05);
 		result |= collideCrashRectangle(33.87 + crashMotion2, 32.76, 0.05, 0.51);
-		//Gate
-		result |= collideCrashRectangle(34.93 + crashMotion2, 30.865, 0.05, 0.365);
+		if (isGate2){
+			//Gate
+			result |= collideCrashRectangle(34.93 + crashMotion2, 30.865, 0.05, 0.365);
+		}
 	}
 	//cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
@@ -1005,8 +1057,8 @@ void Keyboard(unsigned char key, int x, int y) {
 				}
 			}
 		}
-		//camera.moveZ(cameraMotion);
-		cout << "Collection of Key" << CollectKey() << "\n";
+		CollectKey();
+		//cout << "Collection of Key" << CollectKey()<< "\n";
 		break;
 	case 'k':
 		//cout << collideCrash(35.21, 54.6 - crashMotion, 0.06) << "\n";
@@ -1020,7 +1072,8 @@ void Keyboard(unsigned char key, int x, int y) {
 				}
 			}
 		}
-		cout << "Collection of Key" << CollectKey() << "\n";
+		CollectKey();
+		//cout << "Collection of Key" << CollectKey() << "\n";
 		//camera.moveZ(-cameraMotion);
 		break;
 	case 'l':
@@ -1035,8 +1088,8 @@ void Keyboard(unsigned char key, int x, int y) {
 				}
 			}
 		}
-		cout << "Collection of Key" << CollectKey() << "\n";
-		//camera.moveX(-cameraMotion);
+		CollectKey();
+		//cout << "Collection of Key" << CollectKey() << "\n";
 		break;
 	case 'j':
 		//cout << collideCrash(35.21 + crashMotion, 54.6, 0.06) << "\n";
@@ -1050,8 +1103,8 @@ void Keyboard(unsigned char key, int x, int y) {
 				}
 			}
 		}
-		//camera.moveX(cameraMotion);
-		cout << "Collection of Key" << CollectKey() << "\n";
+		CollectKey();
+		//cout << "Collection of Key" << CollectKey() << "\n";
 		break;
 	case GLUT_KEY_ESCAPE:
 		exit(EXIT_SUCCESS);
@@ -1130,19 +1183,41 @@ void myDisplay(void) {
 	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, lightIntensity);
 
+	if (isCrashDead()){
+		isCrash = 0;
+	}
+
+	if (stageEnd()){
+		if (isStage1){
+			isStage1 = 0;
+			isStage2 = 1;
+			initializeCamera = 1;
+		}
+		else{
+			if (isStage2){
+				isStage2 = 0;
+				isStage1 = 1;
+				initializeCamera = 1;
+			}
+		}
+		moveCrashX = 0;
+		moveCrashZ = 0;
+	}
+
 	//Draw Level 1
 	if (isStage1){
-		// Draw crash
-		glPushMatrix();
-		glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
-		glTranslatef(19, -0.15, -10);
-		glScaled(18, 18, 18);
-
-		glRotatef(90.0, 1, 0, 0);
-		//glRotatef(205.f, 0, 0, 1);
-		glScaled(0.001, 0.001, 0.001);
-		crash.Draw();
-		glPopMatrix();
+		if (isCrash){
+			// Draw crash
+			glPushMatrix();
+			glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
+			glTranslatef(19, -0.15, -10);
+			glScaled(18, 18, 18);
+			glRotatef(90.0, 1, 0, 0);
+			//glRotatef(205.f, 0, 0, 1);
+			glScaled(0.001, 0.001, 0.001);
+			crash.Draw();
+			glPopMatrix();
+		}
 
 		// Draw stage1
 		glPushMatrix();
@@ -1315,16 +1390,18 @@ void myDisplay(void) {
 		stage2.Draw();
 		glPopMatrix();
 
-		//Draw Crash
-		glPushMatrix();
-		glTranslatef(55, -0.15, 45);
-		glScaled(18, 18, 18);
-		glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
-		glRotatef(90.0, 1, 0, 0);
-		glRotatef(205.f, 0, 0, 1);
-		glScaled(0.001, 0.001, 0.001);
-		crash.Draw();
-		glPopMatrix();
+		if (isCrash){
+			//Draw Crash
+			glPushMatrix();
+			glTranslatef(55, -0.15, 45);
+			glScaled(18, 18, 18);
+			glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
+			glRotatef(90.0, 1, 0, 0);
+			glRotatef(205.f, 0, 0, 1);
+			glScaled(0.001, 0.001, 0.001);
+			crash.Draw();
+			glPopMatrix();
+		}
 
 		//wall
 		glPushMatrix();
@@ -1460,7 +1537,7 @@ void myDisplay(void) {
 		glTranslatef(70, 0, 20);
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(90.0, 0, 1, 0);
-		glRotatef(150.f, 0, 0, 1);
+		glRotatef(180.f, 0, 0, 1);
 		glScaled(0.0003, 0.0003, 0.0003);
 		griver.Draw();
 		glPopMatrix();
@@ -1470,7 +1547,7 @@ void myDisplay(void) {
 		glTranslatef(40, 0, 20);
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(90.0, 0, 1, 0);
-		glRotatef(320.0f, 0, 0, 1);
+		glRotatef(90.0f, 0, 0, 1);
 		glScaled(0.0003, 0.0003, 0.0003);
 		griver.Draw();
 		glPopMatrix();
@@ -1637,6 +1714,7 @@ void myDisplay(void) {
 
 
 	glutSwapBuffers();
+
 }
 
 
@@ -1800,7 +1878,7 @@ camera.up.z = -0.999021;
 
 */
 //=======================================================================
-boolean initializeCamera = 1;
+
 void setupCamera() {
 
 	if (initializeCamera){
@@ -1825,16 +1903,18 @@ void setupCamera() {
 			camera.up.y = 0.271653;
 			camera.up.z = -0.961973;
 		}
-		if (isStage1){
-			camera.center.x = 18.1594;
-			camera.center.y = 2.57471;
-			camera.center.z = -15.7186;
-			camera.eye.x = 18.0868;
-			camera.eye.y = 2.56383;
-			camera.eye.z = -16.7159;
-			camera.up.x = -0.00104444;
-			camera.up.y = 0.999941;
-			camera.up.z = -0.0108271;
+		else{
+			if (isStage1){
+				camera.center.x = 18.1594;
+				camera.center.y = 2.57471;
+				camera.center.z = -15.7186;
+				camera.eye.x = 18.0868;
+				camera.eye.y = 2.56383;
+				camera.eye.z = -16.7159;
+				camera.up.x = -0.00104444;
+				camera.up.y = 0.999941;
+				camera.up.z = -0.0108271;
+			}
 		}
 
 		initializeCamera = 0;

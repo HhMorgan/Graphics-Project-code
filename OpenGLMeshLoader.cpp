@@ -637,8 +637,8 @@ void setupLight5() {
 //=======================================================================
 //idle Function
 //=======================================================================
-bool isStage1 = 1;
-bool isStage2 = 0;
+bool isStage1 = 0;
+bool isStage2 = 1;
 bool isKey1 = 1;
 bool isKey2 = 1;
 bool isKey3 = 1;
@@ -2362,17 +2362,45 @@ void timer(int value)
 		}
 	}
 
-	else
+	if (isStage2)
 	{
-		camera.center.x = 19.0618 + getCrashPosX();
-		camera.center.y = 3.01877;
-		camera.center.z = 4.9398 + getCrashPosZ();
-		camera.eye.x = 19.0588 + getCrashPosX();
-		camera.eye.y = 3.21607;
-		camera.eye.z = 3.9594 + getCrashPosZ();
-		camera.up.x = -0.000422907;
-		camera.up.y = 0.980344;
-		camera.up.z = 0.197296;
+		if (!freeRoam && isThirdPersonView){
+			if (rotateThirdPerson == 0){
+				camera.center.x = 27.4527 + getCrashPosX();
+				camera.center.y = 3.28283;
+				camera.center.z = 9.6682 + getCrashPosZ();
+				camera.eye.x = 28.4519 + getCrashPosX();
+				camera.eye.y = 3.28346;
+				camera.eye.z = 9.6304 + getCrashPosZ();
+				camera.up.x = -0.00104444;
+				camera.up.y = 0.999941;
+				camera.up.z = -0.0108271;
+			}
+
+			if (rotateThirdPerson == 1){
+				camera.center.x = 19.0618 + getCrashPosX();
+				camera.center.y = 3.01877;
+				camera.center.z = 4.9398 + getCrashPosZ();
+				camera.eye.x = 19.0588 + getCrashPosX();
+				camera.eye.y = 3.21607;
+				camera.eye.z = 3.9594 + getCrashPosZ();
+				camera.up.x = -0.000422907;
+				camera.up.y = 0.980344;
+				camera.up.z = 0.197296;
+			}
+
+			if (rotateThirdPerson == 2){
+				camera.center.x = 19.879 + getCrashPosX();
+				camera.center.y = 3.20067;
+				camera.center.z = 15.365 + getCrashPosZ();
+				camera.eye.x = 19.8818 + getCrashPosX();
+				camera.eye.y = 3.35055;
+				camera.eye.z = 16.3537 + getCrashPosZ();
+				camera.up.x = -0.00143665;
+				camera.up.y = 0.988703;
+				camera.up.z = -0.149883;
+			}
+		}
 	}
 
 	glutTimerFunc(5, timer, value);

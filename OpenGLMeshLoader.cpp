@@ -1273,14 +1273,15 @@ void myDisplay(void) {
 		buildWall(35, 1.67, 6);
 		glPopMatrix();
 
-		//gate
-		glPushMatrix();
-		glTranslatef(18, 0, 30);
-		glScaled(0.03, 0.03, 0.03);
-		glRotatef(90.0, 1, 0, 0);
-		gate.Draw();
-		glPopMatrix();
-
+		if (isGate1){
+			//gate
+			glPushMatrix();
+			glTranslatef(18, 0, 30);
+			glScaled(0.03, 0.03, 0.03);
+			glRotatef(90.0, 1, 0, 0);
+			gate.Draw();
+			glPopMatrix();
+		}
 		//wall
 		glPushMatrix();
 		glTranslated(70.5, 0, 81.7);
@@ -1360,7 +1361,6 @@ void myDisplay(void) {
 		glPopMatrix();
 
 		if (isCrash){
-			/////////////////////////
 			glPushMatrix();
 			glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
 			glTranslatef(55, -0.15, 45);
@@ -1399,19 +1399,6 @@ void myDisplay(void) {
 			glPopMatrix();
 
 			glPopMatrix();
-
-
-			/////////////////////
-			/*//Draw Crash
-			glPushMatrix();
-			glTranslatef(55, -0.15, 45);
-			glScaled(18, 18, 18);
-			glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
-			glRotatef(90.0, 1, 0, 0);
-			glRotatef(205.f, 0, 0, 1);
-			glScaled(0.001, 0.001, 0.001);
-			crash.Draw();
-			glPopMatrix();*/
 		}
 
 		//wall
@@ -1534,14 +1521,16 @@ void myDisplay(void) {
 		buildWall(35, 1.67, 10);
 		glPopMatrix();
 
-		//gate
-		glPushMatrix();
-		glTranslatef(52.2, 0, -31.5);
-		glScaled(0.03, 0.03, 0.03);
-		glRotatef(90.0, 1, 0, 0);
-		glRotatef(-90.0, 0, 0, 1);
-		gate.Draw();
-		glPopMatrix();
+		if (isGate2){
+			//gate
+			glPushMatrix();
+			glTranslatef(52.2, 0, -31.5);
+			glScaled(0.03, 0.03, 0.03);
+			glRotatef(90.0, 1, 0, 0);
+			glRotatef(-90.0, 0, 0, 1);
+			gate.Draw();
+			glPopMatrix();
+		}
 
 		//griver
 		glPushMatrix();
@@ -1835,7 +1824,6 @@ void setupCamera() {
 	camera.look();
 }
 
-
 //=======================================================================
 // Assets Loading Function
 //=======================================================================
@@ -1927,7 +1915,6 @@ void firstPersonView()
 {
 
 	// First Person View
-
 	camera.center.x = -16.0318 + getCrashPosX() + rotateCamera;
 	//camera.center.y = 2.45376;
 	camera.center.z = -42.77647 + getCrashPosZ();
@@ -1951,8 +1938,7 @@ void topView(){
 	camera.up.z = 0.998434;
 }
 
-void timer(int value)
-{
+void timer(int value){
 	if (!freeRoam){
 		if (isTopView){
 			topView();
@@ -2027,8 +2013,7 @@ void timer(int value)
 		}
 	}
 
-	if (isStage2)
-	{
+	if (isStage2){
 		if (!freeRoam){
 			if (isThirdPersonView){
 				camera.center.x = 55.1269 + getCrashPosX() - 35 - 0.1;

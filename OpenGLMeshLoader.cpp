@@ -431,203 +431,6 @@ void myInit(void)
 	glEnable(GL_NORMALIZE);
 }
 
-void setupLight0() {
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	//  glMatrixMode(GL_MODELVIEW);
-	//  glLoadIdentity();
-	//  glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE);
-
-
-	/*GLfloat ambient[] = { 0.7f, 0.7f, 0.7, 1.0f };
-	GLfloat diffuse[] = { 0.6f, 0.6f, 0.6, 1.0f };
-	GLfloat specular[] = { 1.0f, 1.0f, 1.0, 1.0f };
-	GLfloat shininess[] = { 50 };
-	glMaterialfv(GL_LIGHT1, GL_AMBIENT, ambient);
-	glMaterialfv(GL_LIGHT1, GL_DIFFUSE, diffuse);
-	glMaterialfv(GL_LIGHT1, GL_SPECULAR, specular);
-	glMaterialfv(GL_LIGHT1, GL_SHININESS, shininess);*/
-
-	GLfloat ambient[] = { 0, 0, 0, 1.0f };
-	GLfloat diffuse[] = { 1, 1, 1, 1.0f };
-	GLfloat specular[] = { 1, 1, 1, 1.0f };
-	GLfloat shininess[] = { 50 };
-	glMaterialfv(GL_LIGHT0, GL_AMBIENT, ambient);
-	glMaterialfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-	glMaterialfv(GL_LIGHT0, GL_SPECULAR, specular);
-	glMaterialfv(GL_LIGHT0, GL_SHININESS, shininess);
-
-	GLfloat lightIntensityA[] = { 0.7f, 0.7f, 0.7, 1.0f };
-	GLfloat lightIntensityS[] = { 1.f, 1.f, 1.0, 1.0f };
-	GLfloat lightIntensityD[] = { 0.5f, 0.5f, 0.5, 1.0f };
-
-	//lightColorGLfloat LightColor[] = { colorArray[lightColorCounter][0], colorArray[lightColorCounter][1], colorArray[lightColorCounter][2] };
-
-	GLfloat lightPosition[] = { 0.0, 85.0, 0.0, 0 };
-
-	GLfloat spot_direction[] = { 0.0, -1.0, 0.0 };
-
-	GLfloat blackColor[] = { 0.0f, 0.0f, 0.0f };
-
-	//glLightfv(GL_LIGHT1, GL_AMBIENT, redLight);
-	glLightfv(GL_LIGHT0, GL_SPECULAR, blackColor);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, blackColor);
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-	//glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambient);
-
-
-	//glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, constA);
-	//glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, -3.0);
-	//glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, quadicA);
-
-	//glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 45);
-	//glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, spot_direction);
-	//glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 10);
-
-}
-
-void setupLight1() {
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT1);
-
-	GLfloat lightPosition[] = { 3, 7, 3, 1 };
-
-	GLfloat spot_direction[] = { 0.0, -1.0, 0.0 };
-
-	GLfloat redLight[] = { 1.0, 0.0, 0.0 };
-
-	GLfloat ambient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-	glLightfv(GL_LIGHT1, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT1, GL_SPECULAR, redLight);
-	glLightfv(GL_LIGHT1, GL_DIFFUSE, redLight);
-	glLightfv(GL_LIGHT1, GL_POSITION, lightPosition);
-
-
-	glLightf(GL_LIGHT1, GL_CONSTANT_ATTENUATION, 1.0);
-	glLightf(GL_LIGHT1, GL_LINEAR_ATTENUATION, 0.0);
-	glLightf(GL_LIGHT1, GL_QUADRATIC_ATTENUATION, 0.0);
-
-	glLightf(GL_LIGHT1, GL_SPOT_CUTOFF, 45);
-	glLightfv(GL_LIGHT1, GL_SPOT_DIRECTION, spot_direction);
-	glLightf(GL_LIGHT1, GL_SPOT_EXPONENT, 6);
-
-}
-
-void setupLight2() {
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT2);
-
-	GLfloat lightPosition[] = { 0.1, 9, -9.2, 1 };
-
-	GLfloat spot_direction[] = { 0.0, -1.0, 0.0 };
-
-	GLfloat redLight[] = { 1.0, 0.0, 0.0 };
-
-	GLfloat ambient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-	glLightfv(GL_LIGHT2, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT2, GL_SPECULAR, redLight);
-	glLightfv(GL_LIGHT2, GL_DIFFUSE, redLight);
-	glLightfv(GL_LIGHT2, GL_POSITION, lightPosition);
-
-
-	glLightf(GL_LIGHT2, GL_CONSTANT_ATTENUATION, constA);
-	glLightf(GL_LIGHT2, GL_LINEAR_ATTENUATION, linearA);
-	glLightf(GL_LIGHT2, GL_QUADRATIC_ATTENUATION, quadicA);
-
-	glLightf(GL_LIGHT2, GL_SPOT_CUTOFF, 45);
-	glLightfv(GL_LIGHT2, GL_SPOT_DIRECTION, spot_direction);
-	glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 11);
-
-}
-
-void setupLight3() {
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT3);
-
-	GLfloat lightPosition[] = { -9, 9, -9, 1 };
-
-	GLfloat spot_direction[] = { 0.0, -1.0, 0.0 };
-
-	GLfloat ambient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-	glLightfv(GL_LIGHT3, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT3, GL_SPECULAR, glLightColor);
-	glLightfv(GL_LIGHT3, GL_DIFFUSE, glLightColor);
-	glLightfv(GL_LIGHT3, GL_POSITION, lightPosition);
-
-
-	glLightf(GL_LIGHT3, GL_CONSTANT_ATTENUATION, 1.0);
-	glLightf(GL_LIGHT3, GL_LINEAR_ATTENUATION, 0.0);
-	glLightf(GL_LIGHT3, GL_QUADRATIC_ATTENUATION, 0.0);
-
-	glLightf(GL_LIGHT3, GL_SPOT_CUTOFF, 45);
-	glLightfv(GL_LIGHT3, GL_SPOT_DIRECTION, spot_direction);
-	glLightf(GL_LIGHT3, GL_SPOT_EXPONENT, 4);
-
-}
-
-void setupLight4() {
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT4);
-
-	GLfloat lightPosition[] = { 3, 7, 3, 1 };
-
-	GLfloat spot_direction[] = { 0.0, -1.0, 0.0 };
-
-	GLfloat redLight[] = { 1.0, 0.0, 0.0 };
-
-	GLfloat ambient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-	glLightfv(GL_LIGHT4, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT4, GL_SPECULAR, glLightColor);
-	glLightfv(GL_LIGHT4, GL_DIFFUSE, glLightColor);
-	glLightfv(GL_LIGHT4, GL_POSITION, lightPosition);
-
-
-	glLightf(GL_LIGHT4, GL_CONSTANT_ATTENUATION, 1.0);
-	glLightf(GL_LIGHT4, GL_LINEAR_ATTENUATION, 0.0);
-	glLightf(GL_LIGHT4, GL_QUADRATIC_ATTENUATION, 0.0);
-
-	glLightf(GL_LIGHT4, GL_SPOT_CUTOFF, 45);
-	glLightfv(GL_LIGHT4, GL_SPOT_DIRECTION, spot_direction);
-	glLightf(GL_LIGHT4, GL_SPOT_EXPONENT, 7);
-}
-
-void setupLight5() {
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT5);
-
-	GLfloat lightPosition[] = { -8.65, 9, 0.0, 1 };
-
-	GLfloat spot_direction[] = { 0.0, -1.0, 0.0 };
-
-	GLfloat blueLight[] = { 0.0, 0.0, 1.0 };
-
-	GLfloat ambient[] = { 0.0f, 0.0f, 0.0f, 1.0f };
-
-	glLightfv(GL_LIGHT5, GL_AMBIENT, ambient);
-	glLightfv(GL_LIGHT5, GL_SPECULAR, blueLight);
-	glLightfv(GL_LIGHT5, GL_DIFFUSE, blueLight);
-	glLightfv(GL_LIGHT5, GL_POSITION, lightPosition);
-
-
-	glLightf(GL_LIGHT5, GL_CONSTANT_ATTENUATION, constA);
-	glLightf(GL_LIGHT5, GL_LINEAR_ATTENUATION, linearA);
-	glLightf(GL_LIGHT5, GL_QUADRATIC_ATTENUATION, quadicA);
-
-	glLightf(GL_LIGHT5, GL_SPOT_CUTOFF, 45);
-	glLightfv(GL_LIGHT5, GL_SPOT_DIRECTION, spot_direction);
-	glLightf(GL_LIGHT5, GL_SPOT_EXPONENT, 11);
-
-}
-
 
 //=======================================================================
 //idle Function
@@ -641,12 +444,13 @@ bool isKey4 = 1;
 bool isKey5 = 1;
 bool isKey6 = 1;
 bool isCrash = 1;
-bool isGate1 = 0;
-bool isGate2 = 0;
+bool isGate1 = 1;
+bool isGate2 = 1;
 bool freeRoam = 0;
 bool isCrashMoving = 0;
 bool initializeCamera = 1;
 bool isThirdPersonView = 1;
+bool isTopView = 0;
 float crashAnim = 5;
 float crashAnimConstant = 1.5;
 float rotateCamera = 0;
@@ -666,8 +470,60 @@ float moveGriverX = 0.0;
 float moveGriverY = 0.0;
 float moveDiablosX = 0.0;
 float moveDiablosY = 0.0;
-
+float LightRotate = 0;
 int rotateThirdPerson = 0;
+
+
+void setupLight0() {
+
+	glEnable(GL_LIGHTING);
+	glDisable(GL_LIGHT1);
+	glEnable(GL_LIGHT0);
+
+	GLfloat ambient[] = { 0.05f, 0.05f, 0.05, 1.0f };
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+
+	// Define Light source 0 diffuse light
+	GLfloat diffuse[] = { 0.25f, 0.25f, 0.25f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+
+	// Define Light source 0 Specular light
+	GLfloat specular[] = { 15.0f, 15.0f, 15.0f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+
+	glPushMatrix();
+	glTranslatef(18, 15, 15);
+	glRotatef(LightRotate * 360, 0, 1, 0);
+	GLfloat lightpos[4] = { -18.0f, 0.0f, 0.0f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+	glPopMatrix();
+
+}
+void setupLight1() {
+
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT1);
+
+	GLfloat ambient[] = { 0.05f, 0.05f, 0.05, 1.0f };
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
+
+	// Define Light source 0 diffuse light
+	GLfloat diffuse[] = { 0.0f, 0.0f, 0.0f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
+
+	// Define Light source 0 Specular light
+	GLfloat specular[] = { 15.0f, 0.0f, 0.0f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+
+	glPushMatrix();
+	glTranslatef(50, 30, 10);
+	glRotatef(LightRotate * 360, 0, 1, 0);
+	GLfloat lightpos[4] = { -30.0f, 0.0f, 0.0f, 1.0f };
+	glLightfv(GL_LIGHT0, GL_POSITION, lightpos);
+	glPopMatrix();
+
+}
+
 
 float getCrashPosX(){
 	return moveCrashX + 35 + 0.1;;
@@ -1097,6 +953,7 @@ void Keyboard(unsigned char key, int x, int y) {
 			else{
 				if (isStage2){
 					moveCrashZ -= crashMotion2;
+					crashRotate = 180;
 					crashAnimation();
 					isCrashMoving = true;
 				}
@@ -1116,6 +973,7 @@ void Keyboard(unsigned char key, int x, int y) {
 			else{
 				if (isStage2){
 					moveCrashZ += crashMotion2;
+					crashRotate = 0;
 					crashAnimation();
 					isCrashMoving = true;
 				}
@@ -1135,6 +993,7 @@ void Keyboard(unsigned char key, int x, int y) {
 			else{
 				if (isStage2){
 					moveCrashX += crashMotion2;
+					crashRotate = 90;
 					crashAnimation();
 					isCrashMoving = true;
 				}
@@ -1154,6 +1013,7 @@ void Keyboard(unsigned char key, int x, int y) {
 			else{
 				if (isStage2){
 					moveCrashX -= crashMotion2;
+					crashRotate = 270;
 					crashAnimation();
 					isCrashMoving = true;
 				}
@@ -1166,32 +1026,23 @@ void Keyboard(unsigned char key, int x, int y) {
 		isThirdPersonView = !isThirdPersonView;
 		break;
 
-	case 'b':
-		if (!isThirdPersonView){
-			if (rotateCamera > 4)
-				rotateCameraConstant *= -1;
-			if (rotateCamera < -4)
-				rotateCameraConstant *= -1;
-
-			rotateCamera += rotateCameraConstant;
-		}
-
-		else {
-			rotateThirdPerson++;
-
-			if (rotateThirdPerson == 4)
-				rotateThirdPerson = 0;
-		}
-		break;
-
 	case 'f':
 		freeRoam = !freeRoam;
-
-		if (!freeRoam)
-			isThirdPersonView = true;
-
+		isTopView = 0;
+		isThirdPersonView = 0;
 		break;
-
+	case 'g':
+		if (!freeRoam){
+			isThirdPersonView = 1;
+			isTopView = 0;
+		}
+		break;
+	case 't':
+		if (!freeRoam){
+			isTopView = 1;
+			isThirdPersonView = 0;
+		}
+		break;
 
 		/////////////////////////////////////////////////////////////
 
@@ -1254,23 +1105,16 @@ void multipleGrassPatch(float x1, float x2, float x3){
 void myDisplay(void) {
 	setupCamera();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//setupLight0();
-	//setupLight1(); 
-	//setupLight2();
-	//setupLight3();
-	//setupLight4();
-	//setupLight5();
+	if (isStage1)
+		setupLight0();
+	else if (isStage2)
+		setupLight1();
 
-	//GLfloat lightIntensity[] = { 0.7, 0.7, 0.7, 1.0f };
-	/*GLfloat lightIntensity[] = { 1, 1, 1, 1.0f };
-	GLfloat lightPosition[] = {0.0f, 100.0f, 0.0f, 0.0f };
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, lightIntensity);*/
+	if (LightRotate >= 1)
+		LightRotate = 0;
+	else
+		LightRotate += 0.002;
 
-	GLfloat lightIntensity[] = { 0.7, 0.7, 0.7, 1.0f };
-	GLfloat lightPosition[] = { 0.0f, 100.0f, 0.0f, 0.0f };
-	glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
-	glLightfv(GL_LIGHT0, GL_AMBIENT, lightIntensity);
 
 	if (isCrashDead()){
 		isCrash = 0;
@@ -1292,7 +1136,6 @@ void myDisplay(void) {
 		moveCrashX = 0;
 		moveCrashZ = 0;
 	}
-
 	if (isStage1){
 		if (isKeysCollected()){
 			isGate1 = 0;
@@ -1303,7 +1146,6 @@ void myDisplay(void) {
 			isGate2 = 0;
 		}
 	}
-
 	//Draw Level 1
 	if (isStage1){
 		if (isCrash){
@@ -1932,107 +1774,6 @@ void myMouse(int button, int state, int x, int y)
 }
 //=======================================================================
 // Reshape Function
-/*
-camera.center.x = 50.77;
-camera.center.y = 56.9414;
-camera.center.z = 35.0442;
-camera.eye.x = 50.865;
-camera.eye.y = 57.8846;
-camera.eye.z = 34.7259;
-camera.up.x = 0.994553;
-camera.up.y = -0.0761497;
-camera.up.z = 0.071165;
-camera.center.x = 50.894;
-camera.center.y = 56.7377;
-camera.center.z = 35.235;
-camera.eye.x = 50.9432;
-camera.eye.y = 57.6842;
-camera.eye.z = 34.9161;
-camera.up.x = 0.998504;
-camera.up.y = -0.0542527;
-camera.up.z = -0.00684152;
-camera.center.x = 52.1259;
-camera.center.y = 54.6749;
-camera.center.z = 36.5773;
-camera.eye.x = 52.5412;
-camera.eye.y = 55.5844;
-camera.eye.z = 36.5561;
-camera.up.x = 0.907619;
-camera.up.y = -0.412626;
-camera.up.z = 0.0772416;
-camera.center.x = 34.3787;
-camera.center.y = 50.7865;
-camera.center.z = 56.4445;
-camera.eye.x = 33.924;
-camera.eye.y = 50.8932;
-camera.eye.z = 57.3288;
-camera.up.x = 0.00511577;
-camera.up.y = 0.993105;
-camera.up.z = -0.117116;
-camera.center.x = 35.0334;
-camera.center.y = 51.0412;
-camera.center.z = 56.8944;
-camera.eye.x = 34.6759;
-camera.eye.y = 51.0482;
-camera.eye.z = 57.8283;
-camera.up.x = -0.0357871;
-camera.up.y = 0.999137;
-camera.up.z = -0.0210868;
-camera.center.x = 35.0406;
-camera.center.y = 50.8414;
-camera.center.z = 56.8986;
-camera.eye.x = 34.6831;
-camera.eye.y = 50.8484;
-camera.eye.z = 57.8325;
-camera.up.x = -0.0357871;
-camera.up.y = 0.999137;
-camera.up.z = -0.0210868;
-camera.center.x = 33.3375;
-camera.center.y = 2.09296;
-camera.center.z = 60.2626;
-camera.eye.x = 33.1121;
-camera.eye.y = 2.10409;
-camera.eye.z = 61.2368;
-camera.up.x = -0.0184325;
-camera.up.y = 0.999707;
-camera.up.z = -0.0156873;
-camera.center.x = 23.0649;
-camera.center.y = 72.5263;
-camera.center.z = 70.1695;
-camera.eye.x = 23.1202;
-camera.eye.y = 73.3746;
-camera.eye.z = 70.6962;
-camera.up.x = 0.000971282;
-camera.up.y = 0.527399;
-camera.up.z = -0.849617;
-camera.center.x = 18.1594;
-camera.center.y = 2.57471;
-camera.center.z = -15.7186;
-camera.eye.x = 18.0868;
-camera.eye.y = 2.56383;
-camera.eye.z = -16.7159;
-camera.up.x = -0.00104444;
-camera.up.y = 0.999941;
-camera.up.z = -0.0108271;
-camera.center.x = 33.3375;
-camera.center.y = 2.09296;
-camera.center.z = 60.2626;
-camera.eye.x = 33.1121;
-camera.eye.y = 2.10409;
-camera.eye.z = 61.2368;
-camera.up.x = -0.0184325;
-camera.up.y = 0.999707;
-camera.up.z = -0.0156873;
-camera.center.x = 48.4781;
-camera.center.y = 39.7621;
-camera.center.z = 39.8605;
-camera.eye.x = 48.4214;
-camera.eye.y = 40.76;
-camera.eye.z = 39.8914;
-camera.up.x = 0.0298803;
-camera.up.y = 0.0326301;
-camera.up.z = -0.999021;
-*/
 //=======================================================================
 
 void setupCamera() {
@@ -2198,13 +1939,32 @@ void firstPersonView()
 	camera.up.z = -0.0108352;
 }
 
+void topView(){
+	camera.center.x = 18.6111 + getCrashPosX();
+	camera.center.y = 34.9876;
+	camera.center.z = -8.00771 + getCrashPosZ();
+	camera.eye.x = 18.6097 + getCrashPosX();
+	camera.eye.y = 35.9874;
+	camera.eye.z = -7.98469 + getCrashPosZ();
+	camera.up.x = 0.0510274;
+	camera.up.y = -0.0229137;
+	camera.up.z = 0.998434;
+}
+
 void timer(int value)
 {
 	if (!freeRoam){
-		if (isThirdPersonView)
-			thirdPersonView();
-		else
-			firstPersonView();
+		if (isTopView){
+			topView();
+		}
+		else{
+			if (isThirdPersonView){
+				thirdPersonView();
+			}
+			else{
+				firstPersonView();
+			}
+		}
 	}
 
 	if (!isCrashMoving){
@@ -2217,81 +1977,82 @@ void timer(int value)
 		crashIdleAnim += (crashAnimConstant * 0.00005);
 	}
 
-	if (!freeRoam && isThirdPersonView){
+	if (isStage1){
+		if (!freeRoam){
+			if (isThirdPersonView){
+				if (!colideCrashWithAllObjectsRight())
+					camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
 
-		if (rotateThirdPerson == 0){ // Back View
-			if (!colideCrashWithAllObjectsRight())
-				camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
+				else if (colideCrashWithAllObjectsRight())
+					camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
 
-			else if (colideCrashWithAllObjectsRight())
-				camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+				camera.center.y = 2.57471;
 
-			camera.center.y = 2.57471;
+				if (!colideCrashWithAllObjectsBackward())
+					camera.center.z = -51.1186 + getCrashPosZ();
 
-			if (!colideCrashWithAllObjectsBackward())
-				camera.center.z = -51.1186 + getCrashPosZ();
+				else
+					camera.center.z = -47.1186 + getCrashPosZ() + 6;
 
-			else
-				camera.center.z = -47.1186 + getCrashPosZ() + 6;
+				if (!colideCrashWithAllObjectsRight())
+					camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
 
-			if (!colideCrashWithAllObjectsRight())
-				camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
+				else if (colideCrashWithAllObjectsRight())
+					camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
 
-			else if (colideCrashWithAllObjectsRight())
-				camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+				camera.eye.y = 2.56383;
 
-			camera.eye.y = 2.56383;
+				if (!colideCrashWithAllObjectsBackward())
+					camera.eye.z = -52.1159 + getCrashPosZ();
+				else
+					camera.eye.z = -52.1159 + getCrashPosZ() + 6;
 
-			if (!colideCrashWithAllObjectsBackward())
-				camera.eye.z = -52.1159 + getCrashPosZ();
-			else
-				camera.eye.z = -52.1159 + getCrashPosZ() + 6;
+				camera.up.x = -0.00104444;
+				camera.up.y = 0.999941;
+				camera.up.z = -0.0108271;
+			}
+			if (isTopView){
+				camera.center.x = 19.6343 + getCrashPosX() - 35 - 0.1;
+				camera.center.y = 24.8104;
+				camera.center.z = -5.45305 + getCrashPosZ() - 35 - 0.1;
+				camera.eye.x = 19.6329 + getCrashPosX() - 35 - 0.1;
+				camera.eye.y = 25.8101;
+				camera.eye.z = -5.43003 + getCrashPosZ() - 35 - 0.1;
+				camera.up.x = 0.0510274;
+				camera.up.y = -0.0229137;
+				camera.up.z = 0.998434;
+			}
 
-			camera.up.x = -0.00104444;
-			camera.up.y = 0.999941;
-			camera.up.z = -0.0108271;
+
 		}
+	}
 
-
-		else if (rotateThirdPerson == 1){ // Side View
-			camera.center.x = -22.8098 + getCrashPosX();
-			camera.center.y = 2.64848;
-			camera.center.z = -43.73961 + getCrashPosZ();
-			camera.eye.x = -23.8098 + getCrashPosX();
-			camera.eye.y = 2.64746;
-			camera.eye.z = -43.73675 + getCrashPosZ();
-			camera.up.x = -0.00104444;
-			camera.up.y = 0.999941;
-			camera.up.z = -0.0108271;
+	if (isStage2)
+	{
+		if (!freeRoam){
+			if (isThirdPersonView){
+				camera.center.x = 55.1269 + getCrashPosX() - 35 - 0.1;
+				camera.center.y = 3.17513;
+				camera.center.z = 50.2287 + getCrashPosZ() - 35 - 0.1;
+				camera.eye.x = 55.1983 + getCrashPosX() - 35 - 0.1;
+				camera.eye.y = 3.35948;
+				camera.eye.z = 51.209 + getCrashPosZ() - 35 - 0.1;
+				camera.up.x = -0.013642;
+				camera.up.y = 0.982862;
+				camera.up.z = -0.183838;
+			}
+			if (isTopView){
+				camera.center.x = 55.0848 + getCrashPosX() - 35 - 0.1;
+				camera.center.y = 23.2224;
+				camera.center.z = 48.7982 + getCrashPosZ() - 35 - 0.1;
+				camera.eye.x = 55.0734 + getCrashPosX() - 35 - 0.1;
+				camera.eye.y = 24.1919;
+				camera.eye.z = 49.0428 + getCrashPosZ() - 35 - 0.1;
+				camera.up.x = 0.00368193;
+				camera.up.y = 0.244656;
+				camera.up.z = -0.969603;
+			}
 		}
-
-
-		else if (rotateThirdPerson == 2){ // Front View
-			camera.center.x = -16.2835 + getCrashPosX();
-			camera.center.y = 2.71416;
-			camera.center.z = -38.30646 + getCrashPosZ();
-			camera.eye.x = -16.2807 + getCrashPosX();
-			camera.eye.y = 2.72499;
-			camera.eye.z = -37.30652 + getCrashPosZ();
-			camera.up.x = -0.00104444;
-			camera.up.y = 0.999941;
-			camera.up.z = -0.0108271;
-		}
-
-
-		else if (rotateThirdPerson == 3){ // Side View
-			camera.center.x = -9.7971 + getCrashPosX();
-			camera.center.y = 2.66066;
-			camera.center.z = -43.87042 + getCrashPosZ();
-			camera.eye.x = -8.7979 + getCrashPosX();
-			camera.eye.y = 2.66129;
-			camera.eye.z = -43.90818 + getCrashPosZ();
-			camera.up.x = -0.00104444;
-			camera.up.y = 0.999941;
-			camera.up.z = -0.0108271;
-		}
-
-
 	}
 
 	glutTimerFunc(5, timer, value);

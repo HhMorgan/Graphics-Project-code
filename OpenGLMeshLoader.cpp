@@ -326,7 +326,11 @@ int cameraZoom = 0;
 Model_3DS stage1;
 Model_3DS stage2;
 Model_3DS diablos;
+Model_3DS diablos_left_wing;
+Model_3DS diablos_right_wing;
 Model_3DS griver;
+Model_3DS griver_left_wing;
+Model_3DS griver_right_wing;
 Model_3DS slime;
 Model_3DS bomb;
 Model_3DS crash;
@@ -435,8 +439,8 @@ void myInit(void)
 //=======================================================================
 //idle Function
 //=======================================================================
-bool isStage1 = 1;
-bool isStage2 = 0;
+bool isStage1 = 0;
+bool isStage2 = 1;
 bool isKey1 = 1;
 bool isKey2 = 1;
 bool isKey3 = 1;
@@ -453,6 +457,8 @@ bool isThirdPersonView = 1;
 bool isTopView = 0;
 float crashAnim = 5;
 float crashAnimConstant = 1.5;
+float griverAnim = 5;
+float griverAnimConstant = 0.25;
 float rotateCamera = 0;
 float rotateCameraConstant = 0.1;
 float crashIdleAnim = 1.005;
@@ -555,6 +561,15 @@ void crashAnimation(){
 		crashAnimConstant *= -1;
 
 	crashAnim += crashAnimConstant;
+}
+
+void griverAnimation(){
+	if (griverAnim > 7)
+		griverAnimConstant *= -1;
+	else if (griverAnim < -7)
+		griverAnimConstant *= -1;
+
+	griverAnim += griverAnimConstant;
 }
 
 bool keysFunction(){
@@ -1039,8 +1054,8 @@ void Keyboard(unsigned char key, int x, int y) {
 		break;
 	case 't':
 		if (!freeRoam){
-			isTopView = 1;
-			isThirdPersonView = 0;
+			isTopView = !isTopView;
+			isThirdPersonView = !isThirdPersonView;
 		}
 		break;
 
@@ -1538,8 +1553,18 @@ void myDisplay(void) {
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(90.0, 0, 1, 0);
 		glRotatef(180.f, 0, 0, 1);
-		glScaled(0.0003, 0.0003, 0.0003);
+		glScaled(3, 3, 3);
+
 		griver.Draw();
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		griver_left_wing.Draw();
+		glPopMatrix();
+
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		griver_right_wing.Draw();
+		glPopMatrix();
 		glPopMatrix();
 
 		//griver
@@ -1548,8 +1573,16 @@ void myDisplay(void) {
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(90.0, 0, 1, 0);
 		glRotatef(90.0f, 0, 0, 1);
-		glScaled(0.0003, 0.0003, 0.0003);
+		glScaled(3, 3, 3);
 		griver.Draw();
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		griver_left_wing.Draw();
+		glPopMatrix();
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		griver_right_wing.Draw();
+		glPopMatrix();
 		glPopMatrix();
 
 		//diablos
@@ -1558,8 +1591,19 @@ void myDisplay(void) {
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(90.0, 0, 1, 0);
 		glRotatef(260.f, 0, 0, 1);
-		glScaled(0.0003, 0.0003, 0.0003);
+		glScaled(3, 3, 3);
 		diablos.Draw();
+
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		diablos_left_wing.Draw();
+		glPopMatrix();
+
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		diablos_right_wing.Draw();
+		glPopMatrix();
+
 		glPopMatrix();
 
 		if (isKey3){
@@ -1834,8 +1878,12 @@ void LoadAssets()
 	stage2.Load("Models/KHBCB/main/main.3ds");
 	bomb.Load("Models/FFBo/Bomb.3ds");
 	slime.Load("Models/FFBl/blobra.3ds");
-	griver.Load("Models/FFGr/griever.3ds");
-	diablos.Load("Models/FFDi/diabolos.3ds");
+	griver.Load("Models/FFGr/griever_body.3ds");
+	griver_left_wing.Load("Models/FFGr/griever_left_wing.3ds");
+	griver_right_wing.Load("Models/FFGr/griever_right_wing.3ds");
+	diablos.Load("Models/FFDi/diabolos_body.3ds");
+	diablos_left_wing.Load("Models/FFDi/diabolos_left_wing.3ds");
+	diablos_right_wing.Load("Models/FFDi/diabolos_right_wing.3ds");
 	wall.Load("Models/wallStone/stoneWall.3DS");
 	grass.Load("Models/Grass/Grass/Grass.3ds");
 	station.Load("Models/station/Computer Panel/main_panel_ma01.3ds");
@@ -2039,6 +2087,8 @@ void timer(int value){
 			}
 		}
 	}
+
+	griverAnimation();
 
 	glutTimerFunc(5, timer, value);
 	glutPostRedisplay();

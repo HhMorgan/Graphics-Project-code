@@ -1103,7 +1103,26 @@ void Keyboard(unsigned char key, int x, int y) {
 			}
 			else{
 				if (isStage2){
-					moveCrashZ += crashMotion2;
+					if (rotateThirdPerson == 0){
+						moveCrashX -= crashMotion2;
+						crashRotate = -90;
+					}
+
+					else if (rotateThirdPerson == 1){
+						moveCrashZ += crashMotion2;
+						crashRotate = 0;
+					}
+
+					else if (rotateThirdPerson == 3){
+						moveCrashZ -= crashMotion2;
+						crashRotate = 180;
+					}
+
+					else if (rotateThirdPerson == 2){
+						moveCrashX += crashMotion2;
+						crashRotate = 90;
+					}
+
 					crashAnimation();
 					isCrashMoving = true;
 				}
@@ -1141,7 +1160,26 @@ void Keyboard(unsigned char key, int x, int y) {
 			}
 			else{
 				if (isStage2){
-					moveCrashZ -= crashMotion2;
+					if (rotateThirdPerson == 0){
+						moveCrashX += crashMotion2;
+						crashRotate = 90;
+					}
+
+					else if (rotateThirdPerson == 1){
+						moveCrashZ -= crashMotion2;
+						crashRotate = 180;
+					}
+
+					else if (rotateThirdPerson == 3){
+						moveCrashZ += crashMotion2;
+						crashRotate = 0;
+					}
+
+					else if (rotateThirdPerson == 2){
+						moveCrashX -= crashMotion2;
+						crashRotate = -90;
+					}
+
 					crashAnimation();
 					isCrashMoving = true;
 				}
@@ -1178,7 +1216,27 @@ void Keyboard(unsigned char key, int x, int y) {
 			}
 			else{
 				if (isStage2){
-					moveCrashX -= crashMotion2;
+
+					if (rotateThirdPerson == 0){
+						moveCrashZ -= crashMotion2;
+						crashRotate = 180;
+					}
+
+					else if (rotateThirdPerson == 1){
+						moveCrashX -= crashMotion2;
+						crashRotate = -90;
+					}
+
+					else if (rotateThirdPerson == 3){
+						moveCrashX += crashMotion2;
+						crashRotate = 90;
+					}
+
+					else if (rotateThirdPerson == 2){
+						moveCrashZ += crashMotion2;
+						crashRotate = 0;
+					}
+
 					crashAnimation();
 					isCrashMoving = true;
 				}
@@ -1215,7 +1273,27 @@ void Keyboard(unsigned char key, int x, int y) {
 			}
 			else{
 				if (isStage2){
-					moveCrashX += crashMotion2;
+					if (rotateThirdPerson == 0){
+						moveCrashZ += crashMotion2;
+						crashRotate = 0;
+					}
+
+					else if (rotateThirdPerson == 1){
+						moveCrashX += crashMotion2;
+						crashRotate = 90;
+					}
+
+					else if (rotateThirdPerson == 3){
+						moveCrashX -= crashMotion2;
+						crashRotate = -90;
+					}
+
+
+					else if (rotateThirdPerson == 2){
+						moveCrashZ -= crashMotion2;
+						crashRotate = 180;
+					}
+
 					crashAnimation();
 					isCrashMoving = true;
 				}
@@ -2389,7 +2467,7 @@ void timer(int value)
 				camera.up.z = 0.197296;
 			}
 
-			if (rotateThirdPerson == 2){
+			if (rotateThirdPerson == 3){
 				camera.center.x = 19.879 + getCrashPosX();
 				camera.center.y = 3.20067;
 				camera.center.z = 15.365 + getCrashPosZ();
@@ -2399,6 +2477,18 @@ void timer(int value)
 				camera.up.x = -0.00143665;
 				camera.up.y = 0.988703;
 				camera.up.z = -0.149883;
+			}
+
+			if (rotateThirdPerson == 2){
+				camera.center.x = 11.4633 + getCrashPosX();
+				camera.center.y = 3.27235;
+				camera.center.z = 10.5381 + getCrashPosZ();
+				camera.eye.x = 10.4633 +getCrashPosX();
+				camera.eye.y = 3.27133;
+				camera.eye.z = 10.541 + getCrashPosZ();
+				camera.up.x = -0.00104444;
+				camera.up.y = 0.999941;
+				camera.up.z = -0.0108271;
 			}
 		}
 	}

@@ -74,7 +74,7 @@ int stepNo = 0;
 int lightColorCounter = 0;
 using namespace std;
 GLuint tex;
-char title[] = "3D Model Loader Sample";
+char title[] = "Crash Bandicoot";
 
 // 3D Projection Options
 GLdouble fovy = 45.0;
@@ -439,8 +439,8 @@ void myInit(void)
 //=======================================================================
 //idle Function
 //=======================================================================
-bool isStage1 = 0;
-bool isStage2 = 1;
+bool isStage1 = 1;
+bool isStage2 = 0;
 bool isKey1 = 1;
 bool isKey2 = 1;
 bool isKey3 = 1;
@@ -2107,7 +2107,7 @@ void main(int argc, char** argv)
 
 	glutInitWindowSize(WIDTH, HEIGHT);
 
-	glutInitWindowPosition(100, 150);
+	glutInitWindowPosition(100, 100);
 
 	glutCreateWindow(title);
 

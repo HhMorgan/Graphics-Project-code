@@ -74,20 +74,13 @@ int stepNo = 0;
 int lightColorCounter = 0;
 using namespace std;
 GLuint tex;
-char title[] = "Crash Bandicoot";
+char title[] = "Crash Bandicoot's Wild Adventure";
 
 // 3D Projection Options
 GLdouble fovy = 45.0;
 GLdouble aspectRatio = (GLdouble)WIDTH / (GLdouble)HEIGHT;
 GLdouble zNear = 0.1;
 GLdouble zFar = 5000;
-
-// Textures
-GLTexture tex_bar2;
-
-//--------------------------------------------------------------------------------------------------------------------------------
-
-//--------------------------------------------------------------------------------------------------------------------------------
 
 class Vector3f {
 public:
@@ -178,7 +171,6 @@ public:
 };
 Camera camera;
 
-
 void Special(int key, int x, int y) {
 	float a = 2.0;
 
@@ -196,8 +188,16 @@ void Special(int key, int x, int y) {
 		camera.rotateY(-a);
 		break;
 	}
-
 	glutPostRedisplay();
+}
+
+
+bool rotateCameraFlag = 0;
+
+void mouseClicks(int button, int state, int x, int y) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+		rotateCameraFlag = !rotateCameraFlag;
+	}
 }
 
 void changeColor(int movementSpeed) {
@@ -344,35 +344,6 @@ Model_3DS station;
 Model_3DS key;
 Model_3DS gate;
 
-//=======================================================================
-// Lighting Configuration Function
-//=======================================================================
-void InitLightSource()
-{
-	/*/// Enable Lighting for this OpenGL Program
-	glEnable(GL_LIGHTING);
-	// Enable Light Source number 0
-	// OpengL has 8 light sources
-	glEnable(GL_LIGHT0);
-	// Define Light source 0 ambient light
-	GLfloat ambient[] = { 0.1f, 0.1f, 0.1, 1.0f };
-	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-	// Define Light source 0 diffuse light
-	GLfloat diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-	// Define Light source 0 Specular light
-	GLfloat specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
-	// Finally, define light source 0 position in World Space
-	GLfloat light_position[] = { 0.0f, 10.0f, 0.0f, 1.0f };
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);*/
-
-
-	//setupLight0();
-	//setupLight1();
-	//setupLight3();
-
-}
 
 //=======================================================================
 // Material Configuration Function
@@ -426,7 +397,6 @@ void myInit(void)
 	// UP (ux, uy, uz):  denotes the upward orientation of the camera.							 //
 	//*******************************************************************************************//
 
-	InitLightSource();
 
 	InitMaterial();
 
@@ -437,7 +407,7 @@ void myInit(void)
 
 
 //=======================================================================
-//idle Function
+//Global variables
 //=======================================================================
 bool isStage1 = 1;
 bool isStage2 = 0;
@@ -463,8 +433,7 @@ float crashAnimConstant = 1.5;
 float griverAnim = 5;
 float griverAnimConstant = 0.25;
 float rotateKeys = 0;
-float rotateCamera = 0;
-float rotateCameraConstant = 0.1;
+int rotateCamera = 0;
 float crashIdleAnim = 1.005;
 float crashRotate = 0;
 float moveCrashX = 0;
@@ -489,6 +458,7 @@ float moveDiablosZ = 0.0;
 int rotateDiablos = 90;
 float LightRotate = 0;
 int rotateThirdPerson = 0;
+POINT mousePos;
 
 
 void setupLight0() {
@@ -553,9 +523,7 @@ float getCrashPosZ(){
 bool collideCrashRectangle(float x, float z, float sidex, float sidez){
 	float crashCurrentX = getCrashPosX();
 	float crashCurrentZ = getCrashPosZ();
-	//cout << "X : " <<crashCurrentX << "    " << x << ", Z : " <<crashCurrentZ << "     " << z<< "\n";
 	if ((x > crashCurrentX - sidex && x < crashCurrentX + sidex) && (z > crashCurrentZ - sidez && z < crashCurrentZ + sidez)){
-		//cout << "=======================" << "\n";
 		return true;
 	}
 	return false;
@@ -638,7 +606,7 @@ float griever2CollisionsX = 19.8;
 float griever2CollisionsZ = 9.90001;
 float diablosCollisionsX = 30;
 float diablosCollisionsZ = -6.89994;
-// X : 20.4, Z : 9.90002
+
 bool isCrashDead(){
 	bool result = 0;
 	if (isStage1){
@@ -1364,9 +1332,18 @@ void idle() {
 			}
 		}
 	}
+
+	if (!isThirdPersonView){
+		GetCursorPos(&mousePos);
+		//std::cout << "mouse pos . x" << mousePos.x;
+		if (rotateCameraFlag)
+			rotateCamera = (mousePos.x / 125);
+		else
+			rotateCamera = (mousePos.x / 125) * -1;
+	}
 }
 void Keyboard(unsigned char key, int x, int y) {
-	float d = 2;
+	float d = 0.5;
 	float cameraMotion = 0.53;
 	switch (key) {
 	case 'p':
@@ -1388,37 +1365,29 @@ void Keyboard(unsigned char key, int x, int y) {
 		std::cout << "; \n";
 		std::cout << " camera.up.z = " << camera.up.z;
 		std::cout << "; \n";
-
-		std::cout << " POSX = " << posX;
-		std::cout << "; \n";
-		std::cout << " POSY = " << posY;
-		std::cout << "; \n";
-		std::cout << " POSZ = " << posZ;
-		std::cout << "; \n";
 		break;
 
-	case 'w':
+	case 'i':
 		camera.moveY(d);
 		break;
-	case 's':
+	case 'k':
 		camera.moveY(-d);
 		break;
-	case 'a':
+	case 'j':
 		camera.moveX(d);
 		break;
-	case 'd':
+	case 'l':
 		camera.moveX(-d);
 		break;
-	case 'q':
+	case 'u':
 		camera.moveZ(d);
 		break;
-	case 'e':
+	case 'o':
 		camera.moveZ(-d);
 		break;
 
 		/////////////////////////////////////////////////////////////
-	case 'i':
-		//cout << collideCrash(35.21, 54.6 + crashMotion,0.06) << "\n";
+	case 'w':
 		if (!colideCrashWithAllObjectsForward()){
 			if (isStage1){
 				moveCrashZ += crashMotion1;
@@ -1437,7 +1406,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		}
 		CollectKey();
 		break;
-	case 'k':
+	case 's':
 		//cout << collideCrash(35.21, 54.6 - crashMotion, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsBackward()){
 			if (isStage1){
@@ -1457,7 +1426,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		}
 		CollectKey();
 		break;
-	case 'l':
+	case 'd':
 		//cout << collideCrash(35.21 - crashMotion, 54.6, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsRight()){
 			if (isStage1){
@@ -1477,7 +1446,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		}
 		CollectKey();
 		break;
-	case 'j':
+	case 'a':
 		//cout << collideCrash(35.21 + crashMotion, 54.6, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsLeft()){
 			if (isStage1){
@@ -1517,17 +1486,6 @@ void Keyboard(unsigned char key, int x, int y) {
 		isTopView = 1;
 		isThirdPersonView = 0;
 		freeRoam = 0;
-		break;
-
-	case 'b':
-		if (!isThirdPersonView){
-			if (rotateCamera > 5)
-				rotateCameraConstant *= -1;
-			else if (rotateCamera < -5)
-				rotateCameraConstant *= -1;
-
-			rotateCamera += rotateCameraConstant;
-		}
 		break;
 
 		/////////////////////////////////////////////////////////////
@@ -1589,7 +1547,7 @@ void multipleGrassPatch(float x1, float x2, float x3){
 	glPopMatrix();
 }
 
-void myDisplay(void) {
+void Display(void) {
 	setupCamera();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if (isStage1)
@@ -1600,7 +1558,7 @@ void myDisplay(void) {
 	if (LightRotate >= 1)
 		LightRotate = 0;
 	else
-		LightRotate += 0.002;
+		LightRotate += 0.001;
 
 	if (isStage1 || (isStage2 && (!isKeysCollected()))){
 		if (isCrashDead()){
@@ -2164,106 +2122,6 @@ void myDisplay(void) {
 		glPopMatrix();
 	}
 
-	// Draw crash
-	glPushMatrix();
-	glTranslatef(35, -0.15, 55);
-	glScaled(18, 18, 18);
-	glTranslatef(moveCrashX, moveCrashY, moveCrashZ);
-	glRotatef(90.0, 1, 0, 0);
-	glRotatef(205.f, 0, 0, 1);
-	glScaled(0.001, 0.001, 0.001);
-	//crash.Draw();
-	glPopMatrix();
-
-	//bomb
-	glPushMatrix();
-	glTranslatef(35, 0, 52);
-	glRotatef(90.0, 0, 0, 1);
-	glRotatef(90.0, 0, 1, 0);
-	glRotatef(260.f, 0, 0, 1);
-	glScaled(0.0003, 0.0003, 0.0003);
-	//bomb.Draw();
-	glPopMatrix();
-
-
-	//slime
-	glPushMatrix();
-	glTranslatef(35, 0, 52);
-	glRotatef(90.0, 0, 0, 1);
-	glRotatef(90.0, 0, 1, 0);
-	glRotatef(260.f, 0, 0, 1);
-	glScaled(0.0003, 0.0003, 0.0003);
-	//slime.Draw();
-	glPopMatrix();
-
-
-	//griver
-	glPushMatrix();
-	glTranslatef(35, 0, 52);
-	glRotatef(90.0, 0, 0, 1);
-	glRotatef(90.0, 0, 1, 0);
-	glRotatef(260.f, 0, 0, 1);
-	glScaled(0.0003, 0.0003, 0.0003);
-	//griver.Draw();
-	glPopMatrix();
-
-
-	//diablos
-	glPushMatrix();
-	glTranslatef(35, 0, 52);
-	glRotatef(90.0, 0, 0, 1);
-	glRotatef(90.0, 0, 1, 0);
-	glRotatef(260.f, 0, 0, 1);
-	glScaled(0.0003, 0.0003, 0.0003);
-	//diablos.Draw();
-	glPopMatrix();
-
-
-	//wall
-	glPushMatrix();
-	//buildWall(5);
-	glPopMatrix();
-
-
-	//grass
-	glPushMatrix();
-	glTranslatef(35, 0, 52);
-	glRotatef(90.0, 1, 0, 0);
-	//glRotatef(-90.0, 0, 0, 1);
-	//glRotatef(260.f, 0, 0, 1);
-	//grass.Draw();
-	glPopMatrix();
-
-	//teleporter
-	glPushMatrix();
-	glTranslatef(35, 0, 52);
-	glRotatef(90.0, 1, 0, 0);
-	//glRotatef(-90.0, 0, 0, 1);
-	//glRotatef(260.f, 0, 0, 1);
-	//station.Draw();
-	glPopMatrix();
-
-	//gate
-	glPushMatrix();
-	glTranslatef(35, 0, 52);
-	glScaled(0.03, 0.03, 0.03);
-	glRotatef(90.0, 1, 0, 0);
-	//glRotatef(-90.0, 0, 0, 1);
-	//glRotatef(260.f, 0, 0, 1);
-	//gate.Draw();
-	glPopMatrix();
-
-	//collectable
-	glPushMatrix();
-	glTranslatef(35, -1, 53);
-	glScaled(0.025, 0.025, 0.025);
-	glRotatef(90.0, 1, 0, 0);
-	//glRotatef(-90.0, 0, 0, 1);
-	//glRotatef(260.f, 0, 0, 1);
-	//key.Draw();
-	glPopMatrix();
-
-
 	glutSwapBuffers();
 
 }
@@ -2312,6 +2170,7 @@ void myMouse(int button, int state, int x, int y)
 		cameraZoom = y;
 	}
 }
+
 //=======================================================================
 // Reshape Function
 //=======================================================================
@@ -2320,15 +2179,6 @@ void setupCamera() {
 
 	if (initializeCamera){
 		if (isStage2){
-			camera.center.x = 53.0975;
-			camera.center.y = 17.0528;
-			camera.center.z = 57.6918;
-			camera.eye.x = 53.1114;
-			camera.eye.y = 17.5563;
-			camera.eye.z = 58.5557;
-			camera.up.x = -0.0262019;
-			camera.up.y = 0.863837;
-			camera.up.z = -0.50309;
 
 			camera.center.x = 52.4833;
 			camera.center.y = 47.3171;
@@ -2356,17 +2206,6 @@ void setupCamera() {
 
 		initializeCamera = 0;
 	}
-	/*if (moveCameraThirdPerson){
-	camera.center.x += 0.1;
-	camera.center.y = 56.7377;
-	camera.center.z = 35.235;
-	camera.eye.x = 50.9432;
-	camera.eye.y = 57.6842;
-	camera.eye.z = 34.9161;
-	camera.up.x = 0.998504;
-	camera.up.y = -0.0542527;
-	camera.up.z = -0.00684152;
-	}*/
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(fovy, (GLdouble)WIDTH / (GLdouble)HEIGHT, zNear, zFar);
@@ -2403,29 +2242,6 @@ void LoadAssets()
 	crash_left_leg.Load("Models/crash/leftleg.3ds");
 
 	loadBMP(&tex, "Textures/sky4-jpg.bmp", true);
-}
-
-void lightColorAnim(int value)
-{
-	//std::cout << "LIGHT COLOR" << std::endl;
-	//std::cout << lightColorCounter << std::endl;
-	//std::cout << "LIGHT COLOR" << std::endl;
-	//if (lightColorCounter < 8)
-	//	lightColorCounter++;
-	//else
-	//	lightColorCounter = 0;
-	changeColor(20);
-
-	/*std::cout << "" << std::endl;
-	std::cout << "RGB" << std::endl;
-	std::cout << rgblightColor[0] << std::endl;
-	std::cout << rgblightColor[1] << std::endl;
-	std::cout << rgblightColor[2] << std::endl;
-	std::cout << "RGB" << std::endl;*/
-
-	glutPostRedisplay();
-	glutTimerFunc(100, lightColorAnim, 0);
-
 }
 
 
@@ -2633,19 +2449,14 @@ void main(int argc, char** argv)
 
 	glutCreateWindow(title);
 
-	glutDisplayFunc(myDisplay);
+	glutDisplayFunc(Display);
 
 	glutKeyboardFunc(Keyboard);
-
+	glutMouseFunc(mouseClicks);
 	glutSpecialFunc(Special);
 
 	glutIdleFunc(idle);
 	glutTimerFunc(0, timer, 0);
-	//glutMotionFunc(myMotion);
-
-	//glutMouseFunc(myMouse);
-
-	//glutReshapeFunc(myReshape);
 
 	myInit();
 
@@ -2659,7 +2470,6 @@ void main(int argc, char** argv)
 
 	glShadeModel(GL_SMOOTH);
 
-	glutTimerFunc(0, lightColorAnim, 0);
 	glutTimerFunc(0, cameraAnim, 0);
 
 	glutMainLoop();

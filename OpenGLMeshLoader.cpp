@@ -74,7 +74,7 @@ int stepNo = 0;
 int lightColorCounter = 0;
 using namespace std;
 GLuint tex;
-char title[] = "3D Model Loader Sample";
+char title[] = "Crash Bandicoot";
 
 // 3D Projection Options
 GLdouble fovy = 45.0;
@@ -326,7 +326,11 @@ int cameraZoom = 0;
 Model_3DS stage1;
 Model_3DS stage2;
 Model_3DS diablos;
+Model_3DS diablos_left_wing;
+Model_3DS diablos_right_wing;
 Model_3DS griver;
+Model_3DS griver_left_wing;
+Model_3DS griver_right_wing;
 Model_3DS slime;
 Model_3DS bomb;
 Model_3DS crash;
@@ -435,8 +439,8 @@ void myInit(void)
 //=======================================================================
 //idle Function
 //=======================================================================
-bool isStage1 = 1;
-bool isStage2 = 0;
+bool isStage1 = 0;
+bool isStage2 = 1;
 bool isKey1 = 1;
 bool isKey2 = 1;
 bool isKey3 = 1;
@@ -453,6 +457,8 @@ bool isThirdPersonView = 1;
 bool isTopView = 0;
 float crashAnim = 5;
 float crashAnimConstant = 1.5;
+float griverAnim = 5;
+float griverAnimConstant = 0.25;
 float rotateCamera = 0;
 float rotateCameraConstant = 0.1;
 float crashIdleAnim = 1.005;
@@ -463,13 +469,15 @@ float moveCrashZ = 0;
 float crashMotion1 = 0.3;
 float crashMotion2 = 0.3;
 float moveBombX = 0.0;
-float moveBombY = 0.0;
+float moveBombZ = 0.0;
 float moveSlimeX = 0.0;
-float moveSlimeY = 0.0;
-float moveGriverX = 0.0;
-float moveGriverY = 0.0;
+float moveSlimeZ = 0.0;
+float moveGriver1X = 0.0;
+float moveGriver1Z = 0.0;
+float moveGriver2X = 0.0;
+float moveGriver2Z = 0.0;
 float moveDiablosX = 0.0;
-float moveDiablosY = 0.0;
+float moveDiablosZ = 0.0;
 float LightRotate = 0;
 int rotateThirdPerson = 0;
 
@@ -557,6 +565,15 @@ void crashAnimation(){
 	crashAnim += crashAnimConstant;
 }
 
+void griverAnimation(){
+	if (griverAnim > 7)
+		griverAnimConstant *= -1;
+	else if (griverAnim < -7)
+		griverAnimConstant *= -1;
+
+	griverAnim += griverAnimConstant;
+}
+
 bool keysFunction(){
 	bool result1 = 0;
 	bool result2 = 0;
@@ -602,24 +619,33 @@ bool CollectKey(){
 	cout << "X : " << getCrashPosX() << ", Z : " << getCrashPosZ() << "\n";
 	return result;
 }
-
+float bombCollisionsX = 46.2;
+float bombCollisionsZ = 61.8;
+float slimeCollisionsX = 22.05;
+float slimeCollisionsZ = 62.7;
+float griever1CollisionsX = 19.8;
+float griever1CollisionsZ = 9.60002;
+float griever2CollisionsX = 50.1;
+float griever2CollisionsZ = 9.90001;
+float diablosCollisionsX = 30;
+float diablosCollisionsZ = -6.89994;
 bool isCrashDead(){
 	bool result = 0;
 	if (isStage1){
 		//Slime
-		result |= collideCrashRectangle(22.05, 62.7, 2.25, 1.05);
+		result |= collideCrashRectangle(slimeCollisionsX, slimeCollisionsZ, 2.25, 1.05);
 		//Bomb
-		result |= collideCrashSquare(46.2, 61.8, 1.05);
+		result |= collideCrashSquare(bombCollisionsX, bombCollisionsZ, 1.05);
 	}
 	if (isStage2){
 		//Griever1
-		result |= collideCrashSquare(19.8, 9.60002, 1.05);
+		result |= collideCrashSquare(griever1CollisionsX, griever1CollisionsZ, 1.05);
 
 		//Griever2
-		result |= collideCrashSquare(50.1, 9.90001, 1.05);
+		result |= collideCrashSquare(griever2CollisionsX, griever2CollisionsZ, 1.05);
 
 		//Diablos
-		result |= collideCrashSquare(30, -6.89994, 1.05);
+		result |= collideCrashSquare(diablosCollisionsX, diablosCollisionsZ, 1.05);
 	}
 	return result;
 }
@@ -886,8 +912,398 @@ bool colideCrashWithAllObjectsLeft(){
 	return result;
 }
 
+bool bombSeq1 = 1;
+bool bombSeq2 = 0;
+bool bombSeq3 = 0;
+bool bombSeq4 = 0;
+bool bombSeq5 = 0;
+bool bombSeq6 = 0;
+bool bombSeq7 = 0;
+bool slimeSeq1 = 1;
+bool slimeSeq2 = 0;
+bool griver1Seq1 = 1;
+bool griver1Seq2 = 0;
+bool griver1Seq3 = 0;
+bool griver1Seq4 = 0;
+bool griver1Seq5 = 0;
+bool griver1Seq6 = 0;
+bool griver2Seq1 = 1;
+bool griver2Seq2 = 0;
+bool griver2Seq3 = 0;
+bool griver2Seq4 = 0;
+bool griver2Seq5 = 0;
+bool griver2Seq6 = 0;
+bool griver2Seq7 = 0;
+bool diablosSeq1 = 1;
+bool diablosSeq2 = 0;
+bool diablosSeq3 = 0;
+bool diablosSeq4 = 0;
+bool diablosSeq5 = 0;
+bool diablosSeq6 = 0;
+bool diablosSeq7 = 0;
+bool diablosSeq8 = 0;
+bool diablosSeq9 = 0;
+bool diablosSeq10 = 0;
+bool diablosSeq11 = 0;
+bool diablosSeq12 = 0;
+bool diablosSeq13 = 0;
+bool diablosSeq14 = 0;
+bool diablosSeq15 = 0;
+float bombMoveConstant = 0.01;
+float slimeMoveConstant = 0.01;
+float griver1MoveConstant = 0.05;
+float griver2MoveConstant = 0.05;
+float diablosMoveConstant = 0.05;
 void idle() {
+	if (isStage1){
+		//=====================================================================
+		if (bombSeq1){
+			moveBombZ += bombMoveConstant;
+			bombCollisionsZ += bombMoveConstant;
+			if (moveBombZ >= 9.40612){
+				bombSeq1 = 0;
+				bombSeq2 = 1;
+			}
+		}
+		else{
+			if (bombSeq2){
+				moveBombX -= bombMoveConstant;
+				bombCollisionsX -= bombMoveConstant;
+				if (moveBombX <= -10.7302){
+					bombSeq2 = 0;
+					bombSeq3 = 1;
+				}
+			}
+			else{
+				if (bombSeq3){
+					moveBombZ -= bombMoveConstant;
+					bombCollisionsZ -= bombMoveConstant;
+					if (moveBombZ <= 0){
+						bombSeq3 = 0;
+						bombSeq4 = 1;
+					}
+				}
+				else{
+					if (bombSeq4){
+						moveBombZ += bombMoveConstant;
+						bombCollisionsZ += bombMoveConstant;
+						if (moveBombZ >= 9.40612){
+							bombSeq4 = 0;
+							bombSeq5 = 1;
+						}
+					}
+					else{
+						if (bombSeq5){
+							moveBombX += bombMoveConstant;
+							bombCollisionsX += bombMoveConstant;
+							if (moveBombX >= 0){
+								bombSeq5 = 0;
+								bombSeq6 = 1;
+							}
+						}
+						else{
+							if (bombSeq6){
+								moveBombZ -= bombMoveConstant;
+								bombCollisionsZ -= bombMoveConstant;
+								if (moveBombZ <= 0){
+									bombSeq6 = 0;
+									bombSeq1 = 1;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
 
+		//=====================================================================
+		if (slimeSeq1){
+			moveSlimeZ -= slimeMoveConstant;
+			slimeCollisionsZ -= slimeMoveConstant;
+			if (moveSlimeZ <= -10.4601){
+				slimeSeq1 = 0;
+				slimeSeq2 = 1;
+			}
+
+		}
+		else{
+			if (slimeSeq2){
+				moveSlimeZ += slimeMoveConstant;
+				slimeCollisionsZ += slimeMoveConstant;
+				if (moveSlimeZ >= 9.40612){
+					slimeSeq2 = 0;
+					slimeSeq1 = 1;
+				}
+			}
+		}
+	}
+	if (isStage2){
+		//=============================================================
+		if (griver1Seq1){
+			moveGriver1X += griver1MoveConstant;
+			griever1CollisionsX += griver1MoveConstant;
+			if (moveGriver1X >= 7.90009){
+				griver1Seq1 = 0;
+				griver1Seq2 = 1;
+			}
+		}
+		else{
+			if (griver1Seq2){
+				moveGriver1Z += griver1MoveConstant;
+				griever1CollisionsZ += griver1MoveConstant;
+				if (moveGriver1Z >= 9.16011){
+					griver1Seq2 = 0;
+					griver1Seq3 = 1;
+				}
+			}
+			else{
+				if (griver1Seq3){
+					moveGriver1X -= griver1MoveConstant;
+					griever1CollisionsX -= griver1MoveConstant;
+					if (moveGriver1X <= -13.6802){
+						griver1Seq3 = 0;
+						griver1Seq4 = 1;
+					}
+				}
+				else{
+					if (griver1Seq4){
+						moveGriver1Z -= griver1MoveConstant;
+						griever1CollisionsZ -= griver1MoveConstant;
+						if (moveGriver1Z <= 0){
+							griver1Seq4 = 0;
+							griver1Seq5 = 1;
+						}
+					}
+					else{
+						if (griver1Seq5){
+							moveGriver1X += griver1MoveConstant;
+							griever1CollisionsX += griver1MoveConstant;
+							if (moveGriver1X >= 0){
+								griver1Seq5 = 0;
+								griver1Seq1 = 1;
+							}
+						}
+					}
+				}
+			}
+		}
+		//=============================================================
+		if (griver2Seq1){
+			moveGriver2X += griver2MoveConstant;
+			griever2CollisionsX += griver2MoveConstant;
+			if (moveGriver2X >= 9.49012){
+				griver2Seq1 = 0;
+				griver2Seq2 = 1;
+			}
+		}
+		else{
+			if (griver2Seq2){
+				moveGriver2Z -= griver2MoveConstant;
+				griever2CollisionsZ -= griver2MoveConstant;
+				if (moveGriver2Z <= -4.34){
+					griver2Seq2 = 0;
+					griver2Seq3 = 1;
+				}
+			}
+			else{
+				if (griver2Seq3){
+					moveGriver2Z += griver2MoveConstant;
+					griever2CollisionsZ += griver2MoveConstant;
+					if (moveGriver2Z >= 9.11011){
+						griver2Seq3 = 0;
+						griver2Seq4 = 1;
+					}
+				}
+				else{
+					if (griver2Seq4){
+						moveGriver2X -= griver2MoveConstant;
+						griever2CollisionsX -= griver2MoveConstant;
+						if (moveGriver2X <= -10.7602){
+							griver2Seq4 = 0;
+							griver2Seq5 = 1;
+						}
+					}
+					else{
+						if (griver2Seq5){
+							moveGriver2X += griver2MoveConstant;
+							griever2CollisionsX += griver2MoveConstant;
+							if (moveGriver2X >= 9.11011){
+								griver2Seq5 = 0;
+								griver2Seq6 = 1;
+							}
+						}
+						if (griver2Seq6){
+							moveGriver2Z -= griver2MoveConstant;
+							griever2CollisionsZ -= griver2MoveConstant;
+							if (moveGriver2Z >= 0){
+								griver2Seq6 = 0;
+								griver2Seq7 = 1;
+							}
+						}
+						else{
+							if (griver2Seq7){
+								moveGriver2X -= griver2MoveConstant;
+								griever2CollisionsX -= griver2MoveConstant;
+								if (moveGriver2X >= 0){
+									griver2Seq7 = 0;
+									griver2Seq1 = 1;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		//=============================================================
+		if (diablosSeq1){
+			moveDiablosX += diablosMoveConstant;
+			diablosCollisionsX += diablosMoveConstant;
+			if (moveDiablosX >= 16.2503){
+				diablosSeq1 = 0;
+				diablosSeq2 = 1;
+			}
+		}
+		else{
+			if (diablosSeq2){
+				moveDiablosZ -= diablosMoveConstant;
+				diablosCollisionsZ -= diablosMoveConstant;
+				if (moveDiablosZ <= -13.3002){
+					diablosSeq2 = 0;
+					diablosSeq3 = 1;
+				}
+			}
+			else{
+				if (diablosSeq3){
+					moveDiablosX += diablosMoveConstant;
+					diablosCollisionsX += diablosMoveConstant;
+					if (moveDiablosX >= 27.3005){
+						diablosSeq3 = 0;
+						diablosSeq4 = 1;
+					}
+				}
+				else{
+					if (diablosSeq4){
+						moveDiablosZ += diablosMoveConstant;
+						diablosCollisionsZ += diablosMoveConstant;
+						if (moveDiablosZ >= 1.5){
+							diablosSeq4 = 0;
+							diablosSeq5 = 1;
+						}
+					}
+					else{
+						if (diablosSeq5){
+							moveDiablosZ -= diablosMoveConstant;
+							diablosCollisionsZ -= diablosMoveConstant;
+							if (moveDiablosZ <= -13.3002){
+								diablosSeq5 = 0;
+								diablosSeq6 = 1;
+							}
+						}
+						else{
+							if (diablosSeq6){
+								moveDiablosX -= diablosMoveConstant;
+								diablosCollisionsX -= diablosMoveConstant;
+								if (moveDiablosX <= 16.2503){
+									diablosSeq6 = 0;
+									diablosSeq7 = 1;
+								}
+							}
+							else{
+								if (diablosSeq7){
+									moveDiablosZ += diablosMoveConstant;
+									diablosCollisionsZ += diablosMoveConstant;
+									if (moveDiablosZ >= 5.59003){
+										diablosSeq7 = 0;
+										diablosSeq8 = 1;
+									}
+								}
+								else{
+									if (diablosSeq8){
+										moveDiablosX -= diablosMoveConstant;
+										diablosCollisionsX -= diablosMoveConstant;
+										if (moveDiablosX <= -13.3002){
+											diablosSeq8 = 0;
+											diablosSeq9 = 1;
+										}
+									}
+									else{
+										if (diablosSeq9){
+											moveDiablosZ -= diablosMoveConstant;
+											diablosCollisionsZ -= diablosMoveConstant;
+											if (moveDiablosZ <= -13.3002){
+												diablosSeq9 = 0;
+												diablosSeq10 = 1;
+											}
+										}
+										else{
+											if (diablosSeq10){
+												moveDiablosX -= diablosMoveConstant;
+												diablosCollisionsX -= diablosMoveConstant;
+												if (moveDiablosX <= -21.7604){
+													diablosSeq10 = 0;
+													diablosSeq11 = 1;
+												}
+											}
+											else{
+												if (diablosSeq11){
+													moveDiablosZ += diablosMoveConstant;
+													diablosCollisionsZ += diablosMoveConstant;
+													if (moveDiablosZ >= 1.5){
+														diablosSeq11 = 0;
+														diablosSeq12 = 1;
+													}
+												}
+												else{
+													if (diablosSeq12){
+														moveDiablosZ -= diablosMoveConstant;
+														diablosCollisionsZ -= diablosMoveConstant;
+														if (moveDiablosZ <= -13.3002){
+															diablosSeq12 = 0;
+															diablosSeq13 = 1;
+														}
+													}
+													else{
+														if (diablosSeq13){
+															moveDiablosX += diablosMoveConstant;
+															diablosCollisionsX += diablosMoveConstant;
+															if (moveDiablosX >= -13.3002){
+																diablosSeq13 = 0;
+																diablosSeq14 = 1;
+															}
+														}
+														else{
+															if (diablosSeq14){
+																moveDiablosZ += diablosMoveConstant;
+																diablosCollisionsZ += diablosMoveConstant;
+																if (moveDiablosZ >= 0){
+																	diablosSeq14 = 0;
+																	diablosSeq15 = 1;
+																}
+															}
+															else{
+																if (diablosSeq15){
+																	moveDiablosX += diablosMoveConstant;
+																	diablosCollisionsX += diablosMoveConstant;
+																	if (moveDiablosX >= 0){
+																		diablosSeq15 = 0;
+																		diablosSeq1 = 1;
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 void Keyboard(unsigned char key, int x, int y) {
 	float d = 2;
@@ -1027,21 +1443,19 @@ void Keyboard(unsigned char key, int x, int y) {
 		break;
 
 	case 'f':
-		freeRoam = !freeRoam;
+		freeRoam = 1;
 		isTopView = 0;
 		isThirdPersonView = 0;
 		break;
 	case 'g':
-		if (!freeRoam){
-			isThirdPersonView = 1;
-			isTopView = 0;
-		}
+		isThirdPersonView = 1;
+		isTopView = 0;
+		freeRoam = 0;
 		break;
 	case 't':
-		if (!freeRoam){
-			isTopView = 1;
-			isThirdPersonView = 0;
-		}
+		isTopView = 1;
+		isThirdPersonView = 0;
+		freeRoam = 0;
 		break;
 
 		/////////////////////////////////////////////////////////////
@@ -1102,6 +1516,7 @@ void multipleGrassPatch(float x1, float x2, float x3){
 	buildgrass(13, 0.7, 20);
 	glPopMatrix();
 }
+
 void myDisplay(void) {
 	setupCamera();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1308,6 +1723,7 @@ void myDisplay(void) {
 
 		//bomb
 		glPushMatrix();
+		glTranslatef(moveBombX, 0, moveBombZ);
 		glTranslatef(30, 0, 18);
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(90.0, 0, 1, 0);
@@ -1318,6 +1734,7 @@ void myDisplay(void) {
 
 		//slime
 		glPushMatrix();
+		glTranslatef(moveSlimeX, 0, moveSlimeZ);
 		glTranslatef(6, 0, 18);
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(90.0, 0, 1, 0);
@@ -1534,32 +1951,64 @@ void myDisplay(void) {
 
 		//griver
 		glPushMatrix();
+		glTranslatef(moveGriver1X, 0, moveGriver1Z);
 		glTranslatef(70, 0, 20);
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(90.0, 0, 1, 0);
 		glRotatef(180.f, 0, 0, 1);
-		glScaled(0.0003, 0.0003, 0.0003);
+		glScaled(3, 3, 3);
+
 		griver.Draw();
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		griver_left_wing.Draw();
+		glPopMatrix();
+
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		griver_right_wing.Draw();
+		glPopMatrix();
 		glPopMatrix();
 
 		//griver
 		glPushMatrix();
+		glTranslatef(moveGriver2X, 0, moveGriver2Z);
 		glTranslatef(40, 0, 20);
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(90.0, 0, 1, 0);
 		glRotatef(90.0f, 0, 0, 1);
-		glScaled(0.0003, 0.0003, 0.0003);
+		glScaled(3, 3, 3);
 		griver.Draw();
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		griver_left_wing.Draw();
+		glPopMatrix();
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		griver_right_wing.Draw();
+		glPopMatrix();
 		glPopMatrix();
 
 		//diablos
 		glPushMatrix();
+		glTranslatef(moveDiablosX, 0, moveDiablosZ);
 		glTranslatef(50, 0, 3);
 		glRotatef(90.0, 0, 0, 1);
 		glRotatef(90.0, 0, 1, 0);
 		glRotatef(260.f, 0, 0, 1);
-		glScaled(0.0003, 0.0003, 0.0003);
+		glScaled(3, 3, 3);
 		diablos.Draw();
+
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		diablos_left_wing.Draw();
+		glPopMatrix();
+
+		glPushMatrix();
+		glRotated(griverAnim, 1, 1, 1);
+		diablos_right_wing.Draw();
+		glPopMatrix();
+
 		glPopMatrix();
 
 		if (isKey3){
@@ -1834,8 +2283,12 @@ void LoadAssets()
 	stage2.Load("Models/KHBCB/main/main.3ds");
 	bomb.Load("Models/FFBo/Bomb.3ds");
 	slime.Load("Models/FFBl/blobra.3ds");
-	griver.Load("Models/FFGr/griever.3ds");
-	diablos.Load("Models/FFDi/diabolos.3ds");
+	griver.Load("Models/FFGr/griever_body.3ds");
+	griver_left_wing.Load("Models/FFGr/griever_left_wing.3ds");
+	griver_right_wing.Load("Models/FFGr/griever_right_wing.3ds");
+	diablos.Load("Models/FFDi/diabolos_body.3ds");
+	diablos_left_wing.Load("Models/FFDi/diabolos_left_wing.3ds");
+	diablos_right_wing.Load("Models/FFDi/diabolos_right_wing.3ds");
 	wall.Load("Models/wallStone/stoneWall.3DS");
 	grass.Load("Models/Grass/Grass/Grass.3ds");
 	station.Load("Models/station/Computer Panel/main_panel_ma01.3ds");
@@ -2040,6 +2493,8 @@ void timer(int value){
 		}
 	}
 
+	griverAnimation();
+
 	glutTimerFunc(5, timer, value);
 	glutPostRedisplay();
 }
@@ -2057,7 +2512,7 @@ void main(int argc, char** argv)
 
 	glutInitWindowSize(WIDTH, HEIGHT);
 
-	glutInitWindowPosition(100, 150);
+	glutInitWindowPosition(100, 100);
 
 	glutCreateWindow(title);
 

@@ -178,7 +178,6 @@ public:
 };
 Camera camera;
 
-
 void Special(int key, int x, int y) {
 	float a = 2.0;
 
@@ -196,8 +195,16 @@ void Special(int key, int x, int y) {
 		camera.rotateY(-a);
 		break;
 	}
-
 	glutPostRedisplay();
+}
+
+
+bool rotateCameraFlag = 0;
+
+void mouseClicks(int button, int state, int x, int y) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+		rotateCameraFlag = !rotateCameraFlag;
+	}
 }
 
 void changeColor(int movementSpeed) {
@@ -463,8 +470,7 @@ float crashAnimConstant = 1.5;
 float griverAnim = 5;
 float griverAnimConstant = 0.25;
 float rotateKeys = 0;
-float rotateCamera = 0;
-float rotateCameraConstant = 0.1;
+int rotateCamera = 0;
 float crashIdleAnim = 1.005;
 float crashRotate = 0;
 float moveCrashX = 0;
@@ -489,6 +495,7 @@ float moveDiablosZ = 0.0;
 int rotateDiablos = 90;
 float LightRotate = 0;
 int rotateThirdPerson = 0;
+POINT mousePos;
 
 
 void setupLight0() {
@@ -632,12 +639,13 @@ float bombCollisionsX = 46.2;
 float bombCollisionsZ = 61.8;
 float slimeCollisionsX = 22.05;
 float slimeCollisionsZ = 62.7;
-float griever1CollisionsX = 19.8;
+float griever1CollisionsX = 50.1;
 float griever1CollisionsZ = 9.60002;
-float griever2CollisionsX = 50.1;
+float griever2CollisionsX = 19.8;
 float griever2CollisionsZ = 9.90001;
 float diablosCollisionsX = 30;
 float diablosCollisionsZ = -6.89994;
+// X : 20.4, Z : 9.90002
 bool isCrashDead(){
 	bool result = 0;
 	if (isStage1){
@@ -648,10 +656,10 @@ bool isCrashDead(){
 	}
 	if (isStage2){
 		//Griever1
-		result |= collideCrashSquare(griever1CollisionsX, griever1CollisionsZ, 1.05);
+		result |= collideCrashSquare(griever1CollisionsX, griever1CollisionsZ, 1.3);
 
 		//Griever2
-		result |= collideCrashSquare(griever2CollisionsX, griever2CollisionsZ, 1.05);
+		result |= collideCrashSquare(griever2CollisionsX, griever2CollisionsZ, 1.3);
 
 		//Diablos
 		result |= collideCrashSquare(diablosCollisionsX, diablosCollisionsZ, 1.05);
@@ -660,6 +668,12 @@ bool isCrashDead(){
 }
 void isEnemyDead(){
 	if (isStage2){
+		if (collideCrashSquare(griever1CollisionsX, griever1CollisionsZ, 1.3)){
+			isGriver1 = 0;
+		}
+		if (collideCrashSquare(griever2CollisionsX, griever2CollisionsZ, 1.3)){
+			isGriver2 = 0;
+		}
 		//Diablos
 		if (isDiablos && collideCrashSquare(diablosCollisionsX, diablosCollisionsZ, 1.05)){
 			isDiablos = 0;
@@ -1064,6 +1078,7 @@ void idle() {
 	}
 	if (isStage2){
 		//=============================================================
+		//cout << "Griever movement : " << griever1CollisionsX << ", " <<moveGriver1X<<"\n";
 		if (griver1Seq1){
 			moveGriver1X += griver1MoveConstant;
 			griever1CollisionsX += griver1MoveConstant;
@@ -1356,9 +1371,18 @@ void idle() {
 			}
 		}
 	}
+
+	if (!isThirdPersonView){
+		GetCursorPos(&mousePos);
+		//std::cout << "mouse pos . x" << mousePos.x;
+		if (rotateCameraFlag)
+			rotateCamera = (mousePos.x / 125);
+		else
+			rotateCamera = (mousePos.x / 125) * -1;
+	}
 }
 void Keyboard(unsigned char key, int x, int y) {
-	float d = 2;
+	float d = 0.5;
 	float cameraMotion = 0.53;
 	switch (key) {
 	case 'p':
@@ -1511,17 +1535,6 @@ void Keyboard(unsigned char key, int x, int y) {
 		freeRoam = 0;
 		break;
 
-	case 'b':
-		if (!isThirdPersonView){
-			if (rotateCamera > 5)
-				rotateCameraConstant *= -1;
-			else if (rotateCamera < -5)
-				rotateCameraConstant *= -1;
-
-			rotateCamera += rotateCameraConstant;
-		}
-		break;
-
 		/////////////////////////////////////////////////////////////
 
 	case GLUT_KEY_ESCAPE:
@@ -1596,12 +1609,23 @@ void myDisplay(void) {
 
 	if (isStage1 || (isStage2 && (!isKeysCollected()))){
 		if (isCrashDead()){
-			isCrash = 0;
+			moveCrashX = 0;
+			moveCrashZ = 0;
+			if (isStage1){
+				isKey1 = 1;
+				isKey2 = 1;
+			}
+			else{
+				if (isStage2){
+					isKey3 = 1;
+					isKey4 = 1;
+					isKey5 = 1;
+					isKey6 = 1;
+				}
+			}
 		}
 	}
 	else{
-		isGriver1 = 0;
-		isGriver2 = 0;
 		isEnemyDead();
 	}
 
@@ -2293,6 +2317,7 @@ void myMouse(int button, int state, int x, int y)
 		cameraZoom = y;
 	}
 }
+
 //=======================================================================
 // Reshape Function
 //=======================================================================
@@ -2469,7 +2494,7 @@ void firstPersonView()
 		camera.center.z = 7.5696 + getCrashPosZ();
 		camera.eye.x = 19.5271 + getCrashPosX();
 		//camera.eye.y = 2.44289;
-		camera.eye.z =  8.5669 + getCrashPosZ();
+		camera.eye.z = 8.5669 + getCrashPosZ();
 		camera.up.x = -0.00103698;
 		//camera.up.y = 0.999941;
 		camera.up.z = -0.0108241;
@@ -2617,7 +2642,7 @@ void main(int argc, char** argv)
 	glutDisplayFunc(myDisplay);
 
 	glutKeyboardFunc(Keyboard);
-
+	glutMouseFunc(mouseClicks);
 	glutSpecialFunc(Special);
 
 	glutIdleFunc(idle);

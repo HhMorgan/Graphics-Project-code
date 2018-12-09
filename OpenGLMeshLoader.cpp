@@ -1492,6 +1492,7 @@ void Keyboard(unsigned char key, int x, int y) {
 
 	case 'v':
 		isThirdPersonView = !isThirdPersonView;
+		rotateCamera = 0;
 		break;
 
 	case 'f':
@@ -1508,6 +1509,17 @@ void Keyboard(unsigned char key, int x, int y) {
 		isTopView = 1;
 		isThirdPersonView = 0;
 		freeRoam = 0;
+		break;
+
+	case 'b':
+		if (!isThirdPersonView){
+			if (rotateCamera > 5)
+				rotateCameraConstant *= -1;
+			else if (rotateCamera < -5)
+				rotateCameraConstant *= -1;
+
+			rotateCamera += rotateCameraConstant;
+		}
 		break;
 
 		/////////////////////////////////////////////////////////////
@@ -2027,7 +2039,7 @@ void myDisplay(void) {
 			glPopMatrix();
 
 			glPushMatrix();
-			glRotated(griverAnim, 1, 1, 1);
+			glRotated(griverAnim, 0, 0, 1);
 			griver_right_wing.Draw();
 			glPopMatrix();
 			glPopMatrix();
@@ -2048,7 +2060,7 @@ void myDisplay(void) {
 			griver_left_wing.Draw();
 			glPopMatrix();
 			glPushMatrix();
-			glRotated(griverAnim, 1, 1, 1);
+			glRotated(griverAnim, 0, 0, 1);
 			griver_right_wing.Draw();
 			glPopMatrix();
 			glPopMatrix();
@@ -2437,17 +2449,32 @@ void thirdPersonView(){
 
 void firstPersonView()
 {
+	if (isStage1){
+		// First Person View
+		camera.center.x = -16.0318 + getCrashPosX() + rotateCamera;
+		//camera.center.y = 2.45376;
+		camera.center.z = -42.77647 + getCrashPosZ();
+		camera.eye.x = -16.0696 + getCrashPosX();
+		//camera.eye.y = 2.44289;
+		camera.eye.z = -43.7757 + getCrashPosZ();
+		camera.up.x = -0.00104502;
+		//camera.up.y = 0.999941;
+		camera.up.z = -0.0108352;
+	}
 
-	// First Person View
-	camera.center.x = -16.0318 + getCrashPosX() + rotateCamera;
-	//camera.center.y = 2.45376;
-	camera.center.z = -42.77647 + getCrashPosZ();
-	camera.eye.x = -16.0696 + getCrashPosX();
-	//camera.eye.y = 2.44289;
-	camera.eye.z = -43.7757 + getCrashPosZ();
-	camera.up.x = -0.00104502;
-	//camera.up.y = 0.999941;
-	camera.up.z = -0.0108352;
+	else{
+		// First Person View
+		camera.center.x = 19.4544 + getCrashPosX() + rotateCamera;
+		//camera.center.y = 2.45376;
+		camera.center.z = 7.5696 + getCrashPosZ();
+		camera.eye.x = 19.5271 + getCrashPosX();
+		//camera.eye.y = 2.44289;
+		camera.eye.z =  8.5669 + getCrashPosZ();
+		camera.up.x = -0.00103698;
+		//camera.up.y = 0.999941;
+		camera.up.z = -0.0108241;
+	}
+
 }
 
 void topView(){

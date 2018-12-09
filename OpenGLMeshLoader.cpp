@@ -439,8 +439,8 @@ void myInit(void)
 //=======================================================================
 //idle Function
 //=======================================================================
-bool isStage1 = 0;
-bool isStage2 = 1;
+bool isStage1 = 1;
+bool isStage2 = 0;
 bool isKey1 = 1;
 bool isKey2 = 1;
 bool isKey3 = 1;
@@ -455,6 +455,9 @@ bool isCrashMoving = 0;
 bool initializeCamera = 1;
 bool isThirdPersonView = 1;
 bool isTopView = 0;
+bool isGriver1 = 1;
+bool isGriver2 = 1;
+bool isDiablos = 1;
 float crashAnim = 5;
 float crashAnimConstant = 1.5;
 float griverAnim = 5;
@@ -546,7 +549,7 @@ bool collideCrashRectangle(float x, float z, float sidex, float sidez){
 	float crashCurrentZ = getCrashPosZ();
 	//cout << "X : " <<crashCurrentX << "    " << x << ", Z : " <<crashCurrentZ << "     " << z<< "\n";
 	if ((x > crashCurrentX - sidex && x < crashCurrentX + sidex) && (z > crashCurrentZ - sidez && z < crashCurrentZ + sidez)){
-		cout << "=======================" << "\n";
+		//cout << "=======================" << "\n";
 		return true;
 	}
 	return false;
@@ -648,6 +651,14 @@ bool isCrashDead(){
 		result |= collideCrashSquare(diablosCollisionsX, diablosCollisionsZ, 1.05);
 	}
 	return result;
+}
+void isEnemyDead(){
+	if (isStage2){
+		//Diablos
+		if (isDiablos && collideCrashSquare(diablosCollisionsX, diablosCollisionsZ, 1.05)){
+			isDiablos = 0;
+		}
+	}
 }
 
 bool stageEnd(){
@@ -1530,9 +1541,15 @@ void myDisplay(void) {
 	else
 		LightRotate += 0.002;
 
-
-	if (isCrashDead()){
-		isCrash = 0;
+	if (isStage1 || (isStage2 && (!isKeysCollected()))){
+		if (isCrashDead()){
+			isCrash = 0;
+		}
+	}
+	else{
+		isGriver1 = 0;
+		isGriver2 = 0;
+		isEnemyDead();
 	}
 
 	if (stageEnd()){
@@ -1557,7 +1574,7 @@ void myDisplay(void) {
 		}
 	}
 	if (isStage2){
-		if (isKeysCollected()){
+		if (!isDiablos && !isGriver1 && !isGriver2){
 			isGate2 = 0;
 		}
 	}
@@ -1948,68 +1965,71 @@ void myDisplay(void) {
 			gate.Draw();
 			glPopMatrix();
 		}
+		if (isGriver1){
+			//griver
+			glPushMatrix();
+			glTranslatef(moveGriver1X, 0, moveGriver1Z);
+			glTranslatef(70, 0, 20);
+			glRotatef(90.0, 0, 0, 1);
+			glRotatef(90.0, 0, 1, 0);
+			glRotatef(180.f, 0, 0, 1);
+			glScaled(3, 3, 3);
 
-		//griver
-		glPushMatrix();
-		glTranslatef(moveGriver1X, 0, moveGriver1Z);
-		glTranslatef(70, 0, 20);
-		glRotatef(90.0, 0, 0, 1);
-		glRotatef(90.0, 0, 1, 0);
-		glRotatef(180.f, 0, 0, 1);
-		glScaled(3, 3, 3);
+			griver.Draw();
+			glPushMatrix();
+			glRotated(griverAnim, 1, 1, 1);
+			griver_left_wing.Draw();
+			glPopMatrix();
 
-		griver.Draw();
-		glPushMatrix();
-		glRotated(griverAnim, 1, 1, 1);
-		griver_left_wing.Draw();
-		glPopMatrix();
+			glPushMatrix();
+			glRotated(griverAnim, 1, 1, 1);
+			griver_right_wing.Draw();
+			glPopMatrix();
+			glPopMatrix();
+		}
+		if (isGriver2){
+			//griver
+			glPushMatrix();
+			glTranslatef(moveGriver2X, 0, moveGriver2Z);
+			glTranslatef(40, 0, 20);
+			glRotatef(90.0, 0, 0, 1);
+			glRotatef(90.0, 0, 1, 0);
+			glRotatef(90.0f, 0, 0, 1);
+			glScaled(3, 3, 3);
+			griver.Draw();
+			glPushMatrix();
+			glRotated(griverAnim, 1, 1, 1);
+			griver_left_wing.Draw();
+			glPopMatrix();
+			glPushMatrix();
+			glRotated(griverAnim, 1, 1, 1);
+			griver_right_wing.Draw();
+			glPopMatrix();
+			glPopMatrix();
+		}
+		if (isDiablos){
+			//diablos
+			glPushMatrix();
+			glTranslatef(moveDiablosX, 0, moveDiablosZ);
+			glTranslatef(50, 0, 3);
+			glRotatef(90.0, 0, 0, 1);
+			glRotatef(90.0, 0, 1, 0);
+			glRotatef(260.f, 0, 0, 1);
+			glScaled(3, 3, 3);
+			diablos.Draw();
 
-		glPushMatrix();
-		glRotated(griverAnim, 1, 1, 1);
-		griver_right_wing.Draw();
-		glPopMatrix();
-		glPopMatrix();
+			glPushMatrix();
+			glRotated(griverAnim, 1, 1, 1);
+			diablos_left_wing.Draw();
+			glPopMatrix();
 
-		//griver
-		glPushMatrix();
-		glTranslatef(moveGriver2X, 0, moveGriver2Z);
-		glTranslatef(40, 0, 20);
-		glRotatef(90.0, 0, 0, 1);
-		glRotatef(90.0, 0, 1, 0);
-		glRotatef(90.0f, 0, 0, 1);
-		glScaled(3, 3, 3);
-		griver.Draw();
-		glPushMatrix();
-		glRotated(griverAnim, 1, 1, 1);
-		griver_left_wing.Draw();
-		glPopMatrix();
-		glPushMatrix();
-		glRotated(griverAnim, 1, 1, 1);
-		griver_right_wing.Draw();
-		glPopMatrix();
-		glPopMatrix();
+			glPushMatrix();
+			glRotated(griverAnim, 1, 1, 1);
+			diablos_right_wing.Draw();
+			glPopMatrix();
 
-		//diablos
-		glPushMatrix();
-		glTranslatef(moveDiablosX, 0, moveDiablosZ);
-		glTranslatef(50, 0, 3);
-		glRotatef(90.0, 0, 0, 1);
-		glRotatef(90.0, 0, 1, 0);
-		glRotatef(260.f, 0, 0, 1);
-		glScaled(3, 3, 3);
-		diablos.Draw();
-
-		glPushMatrix();
-		glRotated(griverAnim, 1, 1, 1);
-		diablos_left_wing.Draw();
-		glPopMatrix();
-
-		glPushMatrix();
-		glRotated(griverAnim, 1, 1, 1);
-		diablos_right_wing.Draw();
-		glPopMatrix();
-
-		glPopMatrix();
+			glPopMatrix();
+		}
 
 		if (isKey3){
 			//collectable Key3

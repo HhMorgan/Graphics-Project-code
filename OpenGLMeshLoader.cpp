@@ -82,8 +82,9 @@ GLdouble aspectRatio = (GLdouble)WIDTH / (GLdouble)HEIGHT;
 GLdouble zNear = 0.1;
 GLdouble zFar = 5000;
 
+
 class Vector3f {
-public:
+	public:
 	float x, y, z;
 
 	Vector3f(float _x = 0.0f, float _y = 0.0f, float _z = 0.0f) {
@@ -118,7 +119,7 @@ public:
 };
 
 class Camera {
-public:
+	public:
 	Vector3f eye, center, up;
 
 	Camera(float eyeX = 51.0f, float eyeY = 35.0f, float eyeZ = 4.0f, float centerX = 51.0f, float centerY = 34.0f, float centerZ = 3.0f, float upX = 1.0f, float upY = -0.3f, float upZ = -0.5f) {
@@ -162,10 +163,10 @@ public:
 
 	void look() {
 		gluLookAt(
-			eye.x, eye.y, eye.z,
-			center.x, center.y, center.z,
-			up.x, up.y, up.z
-			);
+		eye.x, eye.y, eye.z,
+		center.x, center.y, center.z,
+		up.x, up.y, up.z
+		);
 
 	}
 };
@@ -175,16 +176,16 @@ void Special(int key, int x, int y) {
 	float a = 2.0;
 
 	switch (key) {
-	case GLUT_KEY_UP:
+		case GLUT_KEY_UP:
 		camera.rotateX(a);
 		break;
-	case GLUT_KEY_DOWN:
+		case GLUT_KEY_DOWN:
 		camera.rotateX(-a);
 		break;
-	case GLUT_KEY_LEFT:
+		case GLUT_KEY_LEFT:
 		camera.rotateY(a);
 		break;
-	case GLUT_KEY_RIGHT:
+		case GLUT_KEY_RIGHT:
 		camera.rotateY(-a);
 		break;
 	}
@@ -300,7 +301,7 @@ void bindTexture(GLTexture texture) {
 
 class Vector
 {
-public:
+	public:
 	GLdouble x, y, z;
 	Vector() {}
 	Vector(GLdouble _x, GLdouble _y, GLdouble _z) : x(_x), y(_y), z(_z) {}
@@ -409,8 +410,8 @@ void myInit(void)
 //=======================================================================
 //Global variables
 //=======================================================================
-bool isStage1 = 1;
-bool isStage2 = 0;
+bool isStage1 = 0;
+bool isStage2 = 1;
 bool isKey1 = 1;
 bool isKey2 = 1;
 bool isKey3 = 1;
@@ -460,7 +461,10 @@ float LightRotate = 0;
 int rotateThirdPerson = 0;
 int score = 0;
 int numberOfDeaths = 0;
-int scoreMultiplyer = 3;
+float scoreMultiplier = 3;
+char* saveRank = "S";
+bool scoreCalculation = true;
+
 POINT mousePos;
 
 
@@ -526,12 +530,26 @@ void print(double x, double y, double z, string line){
 	glPopMatrix();
 }
 
-void scoreMultiplerTimer(int value){
+void scoreMultiplierTimerStage1(int value){
 
-	if (scoreMultiplyer != 0.5){
-		scoreMultiplyer -= 0.5;
-		glutTimerFunc(60 * 1000, scoreMultiplerTimer, 0);
+	if (scoreMultiplier != 0.5){
+		if (isStage1 )
+		scoreMultiplier -= 0.5;
 	}
+	if (isStage1)
+	glutTimerFunc(30 * 1000, scoreMultiplierTimerStage1, 0);
+
+}
+
+void scoreMultiplierTimerStage2(int value){
+
+	if (scoreMultiplier != 0.5){
+		if (isStage2)
+			scoreMultiplier -= 0.5;
+	}
+	if (isStage2)
+		glutTimerFunc(60* 1000, scoreMultiplierTimerStage2, 0);
+
 }
 
 
@@ -558,18 +576,18 @@ bool collideCrashSquare(float x, float z, float side){
 
 void crashAnimation(){
 	if (crashAnim > 5)
-		crashAnimConstant *= -1;
+	crashAnimConstant *= -1;
 	else if (crashAnim < -5)
-		crashAnimConstant *= -1;
+	crashAnimConstant *= -1;
 
 	crashAnim += crashAnimConstant;
 }
 
 void griverAnimation(){
 	if (griverAnim > 7)
-		griverAnimConstant *= -1;
+	griverAnimConstant *= -1;
 	else if (griverAnim < -7)
-		griverAnimConstant *= -1;
+	griverAnimConstant *= -1;
 
 	griverAnim += griverAnimConstant;
 }
@@ -658,15 +676,18 @@ bool isCrashDead(){
 }
 void isEnemyDead(){
 	if (isStage2){
-		if (collideCrashSquare(griever1CollisionsX, griever1CollisionsZ, 1.3)){
+		if (collideCrashSquare(griever1CollisionsX, griever1CollisionsZ, 1.3) && isGriver1){
 			isGriver1 = 0;
+			score += 1500;
 		}
-		if (collideCrashSquare(griever2CollisionsX, griever2CollisionsZ, 1.3)){
+		if (collideCrashSquare(griever2CollisionsX, griever2CollisionsZ, 1.3) && isGriver2){
 			isGriver2 = 0;
+			score += 1500;
 		}
 		//Diablos
-		if (isDiablos && collideCrashSquare(diablosCollisionsX, diablosCollisionsZ, 1.05)){
-			isDiablos = 0;
+		if (isDiablos && collideCrashSquare(diablosCollisionsX, diablosCollisionsZ, 1.05) && isDiablos){
+			isDiablos = 0; 
+			score += 2000;
 		}
 	}
 }
@@ -1366,16 +1387,16 @@ void idle() {
 		GetCursorPos(&mousePos);
 		//std::cout << "mouse pos . x" << mousePos.x;
 		if (rotateCameraFlag)
-			rotateCamera = (mousePos.x / 125);
+		rotateCamera = (mousePos.x / 125);
 		else
-			rotateCamera = (mousePos.x / 125) * -1;
+		rotateCamera = (mousePos.x / 125) * -1;
 	}
 }
 void Keyboard(unsigned char key, int x, int y) {
 	float d = 0.5;
 	float cameraMotion = 0.53;
 	switch (key) {
-	case 'p':
+		case 'p':
 		std::cout << " camera.center.x = " << camera.center.x;
 		std::cout << "; \n";
 		std::cout << " camera.center.y = " << camera.center.y;
@@ -1396,27 +1417,27 @@ void Keyboard(unsigned char key, int x, int y) {
 		std::cout << "; \n";
 		break;
 
-	case 'i':
+		case 'i':
 		camera.moveY(d);
 		break;
-	case 'k':
+		case 'k':
 		camera.moveY(-d);
 		break;
-	case 'j':
+		case 'j':
 		camera.moveX(d);
 		break;
-	case 'l':
+		case 'l':
 		camera.moveX(-d);
 		break;
-	case 'u':
+		case 'u':
 		camera.moveZ(d);
 		break;
-	case 'o':
+		case 'o':
 		camera.moveZ(-d);
 		break;
 
 		/////////////////////////////////////////////////////////////
-	case 'w':
+		case 'w':
 		if (!colideCrashWithAllObjectsForward()){
 			if (isStage1){
 				moveCrashZ += crashMotion1;
@@ -1435,7 +1456,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		}
 		CollectKey();
 		break;
-	case 's':
+		case 's':
 		//cout << collideCrash(35.21, 54.6 - crashMotion, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsBackward()){
 			if (isStage1){
@@ -1455,7 +1476,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		}
 		CollectKey();
 		break;
-	case 'd':
+		case 'd':
 		//cout << collideCrash(35.21 - crashMotion, 54.6, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsRight()){
 			if (isStage1){
@@ -1475,7 +1496,7 @@ void Keyboard(unsigned char key, int x, int y) {
 		}
 		CollectKey();
 		break;
-	case 'a':
+		case 'a':
 		//cout << collideCrash(35.21 + crashMotion, 54.6, 0.06) << "\n";
 		if (!colideCrashWithAllObjectsLeft()){
 			if (isStage1){
@@ -1496,22 +1517,22 @@ void Keyboard(unsigned char key, int x, int y) {
 		CollectKey();
 		break;
 
-	case 'v':
+		case 'v':
 		isThirdPersonView = !isThirdPersonView;
 		rotateCamera = 0;
 		break;
 
-	case 'f':
+		case 'f':
 		freeRoam = 1;
 		isTopView = 0;
 		isThirdPersonView = 0;
 		break;
-	case 'g':
+		case 'g':
 		isThirdPersonView = 1;
 		isTopView = 0;
 		freeRoam = 0;
 		break;
-	case 't':
+		case 't':
 		isTopView = 1;
 		isThirdPersonView = 0;
 		freeRoam = 0;
@@ -1519,7 +1540,7 @@ void Keyboard(unsigned char key, int x, int y) {
 
 		/////////////////////////////////////////////////////////////
 
-	case GLUT_KEY_ESCAPE:
+		case GLUT_KEY_ESCAPE:
 		exit(EXIT_SUCCESS);
 	}
 
@@ -1532,7 +1553,38 @@ void stage1Transition(int value){
 	isStage2 = 1;
 	initializeCamera = 1;
 	score = 0;
+	scoreMultiplier = 3;
+	scoreCalculation = true;
+	glutTimerFunc(60* 1000, scoreMultiplierTimerStage2, 0);
+
 }
+
+void thirdPersonView(){
+
+	// Third Person View
+
+	if (!colideCrashWithAllObjectsRight())
+		camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
+
+	else if (colideCrashWithAllObjectsRight())
+		camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+
+	camera.center.y = 2.57471;
+	camera.center.z = -51.1186 + getCrashPosZ();
+
+	if (!colideCrashWithAllObjectsRight())
+		camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
+
+	else if (colideCrashWithAllObjectsRight())
+		camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+
+	camera.eye.y = 2.56383;
+	camera.eye.z = -52.1159 + getCrashPosZ();
+	camera.up.x = -0.00104444;
+	camera.up.y = 0.999941;
+	camera.up.z = -0.0108271;
+}
+
 
 //=======================================================================
 // Display Function
@@ -1587,56 +1639,50 @@ void Display(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (!isStage1 && !isStage2){
+		thirdPersonView();
 
-		camera.center.x = 18.1594;
-		camera.center.y = 2.57471;
-		camera.center.z = -15.7186;
-		camera.eye.x = 18.0868;
-		camera.eye.y = 2.56383;
-		camera.eye.z = -16.7159;
-		camera.up.x = -0.00104444;
-		camera.up.y = 0.999941;
-		camera.up.z = -0.0108271;
+		if (scoreCalculation){
+			if (scoreMultiplier == 3)
+				saveRank = "S";
+			if (scoreMultiplier == 2.5)
+				saveRank = "A";
+			if (scoreMultiplier == 2)
+				saveRank = "B";
+			if (scoreMultiplier == 1.5)
+				saveRank = "C";
+			if (scoreMultiplier == 1)
+				saveRank = "D";
+			if (scoreMultiplier == 0.5)
+				saveRank = "F";	
+			scoreCalculation = false;
+		}
 
-		print(19.2, 5, -10, "Stage Clear!!");
+		glTranslatef(0, -2.3, 0);
 
+		print(19.2, 5.5, -10, "Stage Clear!!");
 
-		glTranslatef(.1, -1, 0);
+		char* rank = saveRank;
+//		glTranslatef(.1, -1, 0);
 		print(19, 5, -10, "Rank:");
-
-		char* rank;
-		if (scoreMultiplyer == 3)
-			rank = "S";
-		if (scoreMultiplyer == 2.5)
-			rank = "A";
-		if (scoreMultiplyer == 2)
-			rank = "B";
-		if (scoreMultiplyer == 1.5)
-			rank = "C";
-		if (scoreMultiplyer == 1)
-			rank = "D";
-		if (scoreMultiplyer == 0.5)
-			rank = "F";
 
 		print(18.5, 4.98, -10, rank);
 
 
-
 		print(19, 4.5, -10, "Score:");
 
+
 		char str[20] = { 0 };
-		sprintf_s(str, "%d", score*scoreMultiplyer);
+		sprintf_s(str, "%g", score*scoreMultiplier);
+
 
 		print(18.5, 4.49, -10, str);
 
-		print(19.5, 4, -10, "Number of Deaths:");
+		print(19, 4, -10, "Deaths:");
 
 		char str2[20] = { 0 };
 		sprintf_s(str2, "%d", numberOfDeaths);
 
-		print(18, 3.96, -10, str2);
-
-		scoreMultiplyer = 3;
+		print(18.4, 3.99, -10, str2);
 
 	}
 
@@ -1654,9 +1700,9 @@ void Display(void) {
 	}
 
 	if (LightRotate >= 1)
-		LightRotate = 0;
+	LightRotate = 0;
 	else
-		LightRotate += 0.001;
+	LightRotate += 0.001;
 
 	if (isStage1 || (isStage2 && (!isKeysCollected()))){
 		if (isCrashDead()){
@@ -1694,13 +1740,13 @@ void Display(void) {
 		score += 5000;
 		if (isStage1){
 			isStage1 = 0;
-			glutTimerFunc(30 * 1000, stage1Transition, 0);
+			glutTimerFunc(20 * 1000, stage1Transition, 0);
 		}
 		else{
 			if (isStage2){
 				isStage2 = 0;
 				initializeCamera = 1;
-				glColor3f(50, 50, 50);
+				glColor3f(0, 50, 50);
 			}
 		}
 		moveCrashX = 0;
@@ -2263,7 +2309,7 @@ void myMotion(int x, int y)
 	GLfloat light_position[] = { 0.0f, 10.0f, 0.0f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-	glutPostRedisplay();	//Re-draw scene 
+	glutPostRedisplay();	//Re-draw scene
 }
 
 //=======================================================================
@@ -2364,31 +2410,6 @@ void cameraAnim(int value) {
 	glutTimerFunc(1, cameraAnim, 0);
 
 }
-void thirdPersonView(){
-
-	// Third Person View
-
-	if (!colideCrashWithAllObjectsRight())
-		camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
-
-	else if (colideCrashWithAllObjectsRight())
-		camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
-
-	camera.center.y = 2.57471;
-	camera.center.z = -51.1186 + getCrashPosZ();
-
-	if (!colideCrashWithAllObjectsRight())
-		camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
-
-	else if (colideCrashWithAllObjectsRight())
-		camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
-
-	camera.eye.y = 2.56383;
-	camera.eye.z = -52.1159 + getCrashPosZ();
-	camera.up.x = -0.00104444;
-	camera.up.y = 0.999941;
-	camera.up.z = -0.0108271;
-}
 
 void firstPersonView()
 {
@@ -2450,9 +2471,9 @@ void timer(int value){
 	if (!isCrashMoving){
 		crashAnim = 0;
 		if (crashIdleAnim > 1.005)
-			crashAnimConstant *= -1;
+		crashAnimConstant *= -1;
 		else if (crashIdleAnim < 1)
-			crashAnimConstant *= -1;
+		crashAnimConstant *= -1;
 
 		crashIdleAnim += (crashAnimConstant * 0.00005);
 	}
@@ -2461,31 +2482,31 @@ void timer(int value){
 		if (!freeRoam){
 			if (isThirdPersonView){
 				if (!colideCrashWithAllObjectsRight())
-					camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
+				camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
 
 				else if (colideCrashWithAllObjectsRight())
-					camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+				camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
 
 				camera.center.y = 2.57471;
 
 				if (!colideCrashWithAllObjectsBackward())
-					camera.center.z = -51.1186 + getCrashPosZ();
+				camera.center.z = -51.1186 + getCrashPosZ();
 
 				else
-					camera.center.z = -47.1186 + getCrashPosZ() + 6;
+				camera.center.z = -47.1186 + getCrashPosZ() + 6;
 
 				if (!colideCrashWithAllObjectsRight())
-					camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
+				camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
 
 				else if (colideCrashWithAllObjectsRight())
-					camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+				camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
 
 				camera.eye.y = 2.56383;
 
 				if (!colideCrashWithAllObjectsBackward())
-					camera.eye.z = -52.1159 + getCrashPosZ();
+				camera.eye.z = -52.1159 + getCrashPosZ();
 				else
-					camera.eye.z = -52.1159 + getCrashPosZ() + 6;
+				camera.eye.z = -52.1159 + getCrashPosZ() + 6;
 
 				camera.up.x = -0.00104444;
 				camera.up.y = 0.999941;
@@ -2564,7 +2585,7 @@ void main(int argc, char** argv)
 	glutSpecialFunc(Special);
 
 	glutIdleFunc(idle);
-	glutTimerFunc(60 * 1000, scoreMultiplerTimer, 0);
+	glutTimerFunc(20 * 1000, scoreMultiplierTimerStage1, 0);
 	glutTimerFunc(0, timer, 0);
 
 	myInit();

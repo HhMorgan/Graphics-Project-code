@@ -1546,7 +1546,7 @@ void multipleGrassPatch(float x1, float x2, float x3){
 	buildgrass(13, 0.7, 20);
 	glPopMatrix();
 }
-
+bool startHero = 1;
 void Display(void) {
 	setupCamera();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -1567,6 +1567,7 @@ void Display(void) {
 			if (isStage1){
 				isKey1 = 1;
 				isKey2 = 1;
+				isGate1 = 1;
 			}
 			else{
 				if (isStage2){
@@ -1574,12 +1575,17 @@ void Display(void) {
 					isKey4 = 1;
 					isKey5 = 1;
 					isKey6 = 1;
+					isGate2 = 1;
 				}
 			}
 		}
 	}
 	else{
 		isEnemyDead();
+		if (startHero){
+			PlaySound(TEXT("Struggle.wav"), NULL, SND_ASYNC | SND_LOOP);
+			startHero = 0;
+		}
 	}
 
 	if (stageEnd()){
@@ -2437,7 +2443,7 @@ void timer(int value){
 //=======================================================================
 void main(int argc, char** argv)
 {
-	//setupCamera();
+	PlaySound(TEXT("Destati.wav"), NULL, SND_ASYNC | SND_LOOP);
 
 	glutInit(&argc, argv);
 

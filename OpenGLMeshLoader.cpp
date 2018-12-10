@@ -458,6 +458,9 @@ float moveDiablosZ = 0.0;
 int rotateDiablos = 90;
 float LightRotate = 0;
 int rotateThirdPerson = 0;
+int score = 0;
+int numberOfDeaths = 0;
+int scoreMultiplyer = 3;
 POINT mousePos;
 
 
@@ -511,6 +514,26 @@ void setupLight1() {
 
 }
 
+void print(double x, double y, double z, string line){
+	glPushMatrix();
+	char c;
+	glRasterPos3f(x, y, z);
+	for (int i = 0; i<line.size(); i++)
+	{
+		c = line.at(i);
+		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, c);
+	}
+	glPopMatrix();
+}
+
+void scoreMultiplerTimer(int value){
+
+	if (scoreMultiplyer != 0.5){
+		scoreMultiplyer -= 0.5;
+		glutTimerFunc(60 * 1000, scoreMultiplerTimer, 0);
+	}
+}
+
 
 float getCrashPosX(){
 	return moveCrashX + 35 + 0.1;;
@@ -561,11 +584,13 @@ bool keysFunction(){
 	if (isStage1){
 		result1 |= collideCrashSquare(46.2, 54.6, 0.75);
 		result2 |= collideCrashSquare(22.2, 69.6, 0.75);
-		if (result1){
+		if (result1 & isKey1){
 			isKey1 = 0;
+			score += 1000;
 		}
-		if (result2){
+		if (result2 & isKey2){
 			isKey2 = 0;
+			score += 1000;
 		}
 	}
 
@@ -574,17 +599,21 @@ bool keysFunction(){
 		result4 |= collideCrashSquare(35.1, 15.9, 0.75);
 		result5 |= collideCrashSquare(8.10002, -7.19994, 0.75);
 		result6 |= collideCrashSquare(56.1, -7.19994, 0.75);
-		if (result3){
+		if (result3 & isKey3){
 			isKey3 = 0;
+			score += 1000;
 		}
-		if (result4){
+		if (result4 & isKey4){
 			isKey4 = 0;
+			score += 1000;
 		}
-		if (result5){
+		if (result5 & isKey5){
 			isKey5 = 0;
+			score += 1000;
 		}
-		if (result6){
+		if (result6 & isKey6){
 			isKey6 = 0;
+			score += 1000;
 		}
 	}
 	return result1 | result2 | result3 | result4 | result5 | result6;
@@ -1499,6 +1528,11 @@ void Keyboard(unsigned char key, int x, int y) {
 	glutPostRedisplay();
 }
 
+void stage1Transition(int value){
+	isStage2 = 1;
+	initializeCamera = 1;
+}
+
 //=======================================================================
 // Display Function
 //=======================================================================
@@ -1550,10 +1584,72 @@ bool startHero = 1;
 void Display(void) {
 	setupCamera();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	if (isStage1)
+
+	if (!isStage1 && !isStage2){
+
+		camera.center.x = 18.1594;
+		camera.center.y = 2.57471;
+		camera.center.z = -15.7186;
+		camera.eye.x = 18.0868;
+		camera.eye.y = 2.56383;
+		camera.eye.z = -16.7159;
+		camera.up.x = -0.00104444;
+		camera.up.y = 0.999941;
+		camera.up.z = -0.0108271;
+
+		print(19.2, 5, -10, "Stage Clear!!");
+
+
+		glTranslatef(.1, -1, 0);
+		print(19, 5, -10, "Rank:");
+
+		char* rank;
+		if (scoreMultiplyer == 3)
+			rank = "S";
+		if (scoreMultiplyer == 2.5)
+			rank = "A";
+		if (scoreMultiplyer == 2)
+			rank = "B";
+		if (scoreMultiplyer == 1.5)
+			rank = "C";
+		if (scoreMultiplyer == 1)
+			rank = "D";
+		if (scoreMultiplyer == 0.5)
+			rank = "F";
+
+		print(18.5, 4.98, -10, rank);
+
+
+
+		print(19, 4.5, -10, "Score:");
+
+		char str[20] = { 0 };
+		sprintf_s(str, "%d", score*scoreMultiplyer);
+
+		print(18.5, 4.49, -10, str);
+
+		print(19.5, 4, -10, "Number of Deaths:");
+
+		char str2[20] = { 0 };
+		sprintf_s(str2, "%d", numberOfDeaths);
+
+		print(18, 3.96, -10, str2);
+
+		scoreMultiplyer = 3;
+	}
+
+
+	if (isStage1){
 		setupLight0();
-	else if (isStage2)
-		setupLight1();
+	}
+	else {
+		if (isStage2){
+			setupLight1();
+		}
+		else{
+			setupLight0();
+		}
+	}
 
 	if (LightRotate >= 1)
 		LightRotate = 0;
@@ -1562,6 +1658,8 @@ void Display(void) {
 
 	if (isStage1 || (isStage2 && (!isKeysCollected()))){
 		if (isCrashDead()){
+			numberOfDeaths++;
+			score = 0;
 			moveCrashX = 0;
 			moveCrashZ = 0;
 			if (isStage1){
@@ -1581,24 +1679,26 @@ void Display(void) {
 		}
 	}
 	else{
-		isEnemyDead();
-		if (startHero){
-			PlaySound(TEXT("Struggle.wav"), NULL, SND_ASYNC | SND_LOOP);
-			startHero = 0;
+		if (isKeysCollected()){
+			isEnemyDead();
+			if (startHero){
+				PlaySound(TEXT("Struggle.wav"), NULL, SND_ASYNC | SND_LOOP);
+				startHero = 0;
+			}
 		}
 	}
 
 	if (stageEnd()){
+		score += 5000;
 		if (isStage1){
 			isStage1 = 0;
-			isStage2 = 1;
-			initializeCamera = 1;
+			glutTimerFunc(30 * 1000, stage1Transition, 0);
 		}
 		else{
 			if (isStage2){
 				isStage2 = 0;
-				isStage1 = 1;
 				initializeCamera = 1;
+				glColor3f(50, 50, 50);
 			}
 		}
 		moveCrashX = 0;
@@ -2462,6 +2562,7 @@ void main(int argc, char** argv)
 	glutSpecialFunc(Special);
 
 	glutIdleFunc(idle);
+	glutTimerFunc(60 * 1000, scoreMultiplerTimer, 0);
 	glutTimerFunc(0, timer, 0);
 
 	myInit();

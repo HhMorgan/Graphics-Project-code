@@ -1531,6 +1531,7 @@ void Keyboard(unsigned char key, int x, int y) {
 void stage1Transition(int value){
 	isStage2 = 1;
 	initializeCamera = 1;
+	score = 0;
 }
 
 //=======================================================================
@@ -1636,6 +1637,7 @@ void Display(void) {
 		print(18, 3.96, -10, str2);
 
 		scoreMultiplyer = 3;
+
 	}
 
 

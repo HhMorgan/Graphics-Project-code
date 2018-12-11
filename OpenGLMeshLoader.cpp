@@ -2581,7 +2581,7 @@ void main(int argc, char** argv)
 	glutDisplayFunc(Display);
 
 	glutKeyboardFunc(Keyboard);
-	glutMouseFunc(mouseClicks);
+	glutMouseFunc(mouseClicks);    
 	glutSpecialFunc(Special);
 
 	glutIdleFunc(idle);

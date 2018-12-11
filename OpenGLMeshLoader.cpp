@@ -82,6 +82,7 @@ GLdouble aspectRatio = (GLdouble)WIDTH / (GLdouble)HEIGHT;
 GLdouble zNear = 0.1;
 GLdouble zFar = 5000;
 
+
 class Vector3f {
 public:
 	float x, y, z;
@@ -460,7 +461,10 @@ float LightRotate = 0;
 int rotateThirdPerson = 0;
 int score = 0;
 int numberOfDeaths = 0;
-int scoreMultiplyer = 3;
+float scoreMultiplier = 3;
+char* saveRank = "S";
+bool scoreCalculation = true;
+
 POINT mousePos;
 
 
@@ -526,12 +530,26 @@ void print(double x, double y, double z, string line){
 	glPopMatrix();
 }
 
-void scoreMultiplerTimer(int value){
+void scoreMultiplierTimerStage1(int value){
 
-	if (scoreMultiplyer != 0.5){
-		scoreMultiplyer -= 0.5;
-		glutTimerFunc(60 * 1000, scoreMultiplerTimer, 0);
+	if (scoreMultiplier != 0.5){
+		if (isStage1)
+			scoreMultiplier -= 0.5;
 	}
+	if (isStage1)
+		glutTimerFunc(30 * 1000, scoreMultiplierTimerStage1, 0);
+
+}
+
+void scoreMultiplierTimerStage2(int value){
+
+	if (scoreMultiplier != 0.5){
+		if (isStage2)
+			scoreMultiplier -= 0.5;
+	}
+	if (isStage2)
+		glutTimerFunc(60 * 1000, scoreMultiplierTimerStage2, 0);
+
 }
 
 
@@ -658,15 +676,18 @@ bool isCrashDead(){
 }
 void isEnemyDead(){
 	if (isStage2){
-		if (collideCrashSquare(griever1CollisionsX, griever1CollisionsZ, 1.3)){
+		if (collideCrashSquare(griever1CollisionsX, griever1CollisionsZ, 1.3) && isGriver1){
 			isGriver1 = 0;
+			score += 1500;
 		}
-		if (collideCrashSquare(griever2CollisionsX, griever2CollisionsZ, 1.3)){
+		if (collideCrashSquare(griever2CollisionsX, griever2CollisionsZ, 1.3) && isGriver2){
 			isGriver2 = 0;
+			score += 1500;
 		}
 		//Diablos
-		if (isDiablos && collideCrashSquare(diablosCollisionsX, diablosCollisionsZ, 1.05)){
+		if (isDiablos && collideCrashSquare(diablosCollisionsX, diablosCollisionsZ, 1.05) && isDiablos){
 			isDiablos = 0;
+			score += 2000;
 		}
 	}
 }
@@ -1532,7 +1553,38 @@ void stage1Transition(int value){
 	isStage2 = 1;
 	initializeCamera = 1;
 	score = 0;
+	scoreMultiplier = 3;
+	scoreCalculation = true;
+	glutTimerFunc(60 * 1000, scoreMultiplierTimerStage2, 0);
+
 }
+
+void thirdPersonView(){
+
+	// Third Person View
+
+	if (!colideCrashWithAllObjectsRight())
+		camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
+
+	else if (colideCrashWithAllObjectsRight())
+		camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+
+	camera.center.y = 2.57471;
+	camera.center.z = -51.1186 + getCrashPosZ();
+
+	if (!colideCrashWithAllObjectsRight())
+		camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
+
+	else if (colideCrashWithAllObjectsRight())
+		camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
+
+	camera.eye.y = 2.56383;
+	camera.eye.z = -52.1159 + getCrashPosZ();
+	camera.up.x = -0.00104444;
+	camera.up.y = 0.999941;
+	camera.up.z = -0.0108271;
+}
+
 
 //=======================================================================
 // Display Function
@@ -1587,56 +1639,50 @@ void Display(void) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	if (!isStage1 && !isStage2){
+		thirdPersonView();
 
-		camera.center.x = 18.1594;
-		camera.center.y = 2.57471;
-		camera.center.z = -15.7186;
-		camera.eye.x = 18.0868;
-		camera.eye.y = 2.56383;
-		camera.eye.z = -16.7159;
-		camera.up.x = -0.00104444;
-		camera.up.y = 0.999941;
-		camera.up.z = -0.0108271;
+		if (scoreCalculation){
+			if (scoreMultiplier == 3)
+				saveRank = "S";
+			if (scoreMultiplier == 2.5)
+				saveRank = "A";
+			if (scoreMultiplier == 2)
+				saveRank = "B";
+			if (scoreMultiplier == 1.5)
+				saveRank = "C";
+			if (scoreMultiplier == 1)
+				saveRank = "D";
+			if (scoreMultiplier == 0.5)
+				saveRank = "F";
+			scoreCalculation = false;
+		}
 
-		print(19.2, 5, -10, "Stage Clear!!");
+		glTranslatef(0, -2.3, 0);
 
+		print(19.2, 5.5, -10, "Stage Clear!!");
 
-		glTranslatef(.1, -1, 0);
+		char* rank = saveRank;
+		//		glTranslatef(.1, -1, 0);
 		print(19, 5, -10, "Rank:");
-
-		char* rank;
-		if (scoreMultiplyer == 3)
-			rank = "S";
-		if (scoreMultiplyer == 2.5)
-			rank = "A";
-		if (scoreMultiplyer == 2)
-			rank = "B";
-		if (scoreMultiplyer == 1.5)
-			rank = "C";
-		if (scoreMultiplyer == 1)
-			rank = "D";
-		if (scoreMultiplyer == 0.5)
-			rank = "F";
 
 		print(18.5, 4.98, -10, rank);
 
 
-
 		print(19, 4.5, -10, "Score:");
 
+
 		char str[20] = { 0 };
-		sprintf_s(str, "%d", score*scoreMultiplyer);
+		sprintf_s(str, "%g", score*scoreMultiplier);
+
 
 		print(18.5, 4.49, -10, str);
 
-		print(19.5, 4, -10, "Number of Deaths:");
+		print(19, 4, -10, "Deaths:");
 
 		char str2[20] = { 0 };
 		sprintf_s(str2, "%d", numberOfDeaths);
 
-		print(18, 3.96, -10, str2);
-
-		scoreMultiplyer = 3;
+		print(18.4, 3.99, -10, str2);
 
 	}
 
@@ -1694,13 +1740,13 @@ void Display(void) {
 		score += 5000;
 		if (isStage1){
 			isStage1 = 0;
-			glutTimerFunc(30 * 1000, stage1Transition, 0);
+			glutTimerFunc(20 * 1000, stage1Transition, 0);
 		}
 		else{
 			if (isStage2){
 				isStage2 = 0;
 				initializeCamera = 1;
-				glColor3f(50, 50, 50);
+				glColor3f(0, 50, 50);
 			}
 		}
 		moveCrashX = 0;
@@ -2263,7 +2309,7 @@ void myMotion(int x, int y)
 	GLfloat light_position[] = { 0.0f, 10.0f, 0.0f, 1.0f };
 	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 
-	glutPostRedisplay();	//Re-draw scene 
+	glutPostRedisplay();	//Re-draw scene
 }
 
 //=======================================================================
@@ -2363,31 +2409,6 @@ void cameraAnim(int value) {
 	glutPostRedisplay();
 	glutTimerFunc(1, cameraAnim, 0);
 
-}
-void thirdPersonView(){
-
-	// Third Person View
-
-	if (!colideCrashWithAllObjectsRight())
-		camera.center.x = -16.9406 + getCrashPosX(); // No Collisions on the right side of crash
-
-	else if (colideCrashWithAllObjectsRight())
-		camera.center.x = -16 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
-
-	camera.center.y = 2.57471;
-	camera.center.z = -51.1186 + getCrashPosZ();
-
-	if (!colideCrashWithAllObjectsRight())
-		camera.eye.x = -17.0132 + getCrashPosX(); // No Collisions on the right side of crash
-
-	else if (colideCrashWithAllObjectsRight())
-		camera.eye.x = -16.15 + getCrashPosX(); // To avoid the camera going through the object, I decremented the value
-
-	camera.eye.y = 2.56383;
-	camera.eye.z = -52.1159 + getCrashPosZ();
-	camera.up.x = -0.00104444;
-	camera.up.y = 0.999941;
-	camera.up.z = -0.0108271;
 }
 
 void firstPersonView()
@@ -2564,7 +2585,7 @@ void main(int argc, char** argv)
 	glutSpecialFunc(Special);
 
 	glutIdleFunc(idle);
-	glutTimerFunc(60 * 1000, scoreMultiplerTimer, 0);
+	glutTimerFunc(20 * 1000, scoreMultiplierTimerStage1, 0);
 	glutTimerFunc(0, timer, 0);
 
 	myInit();
